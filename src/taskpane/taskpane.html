@@ -8,6 +8,8 @@
       body { font-family: Arial, sans-serif; padding: 20px; }
       h2 { margin-top: 24px; }
       .button {
+        display: inline-block;
+        text-decoration: none;
         padding: 8px 16px;
         background-color: #ff8b00;
         color: black;
@@ -16,6 +18,7 @@
         margin: 6px 0;
         cursor: pointer;
         font-size: 14px;
+        text-align: center;
       }
       .button:hover {
         background-color: #f8f8f8;
@@ -49,20 +52,26 @@
   <body>
     <div class="section">
       <h2>Templates</h2>
-      <button class="button" onclick="insertTemplate('https://nepa-ab.github.io/Nepa-Templates-Add-in/src/templates/Nepa empty template.pptx')">
+      <a class="button"
+         href="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/templates/Nepa%20empty%20template.pptx"
+         target="_blank"
+         rel="noopener noreferrer">
         Insert Nepa Empty Template
-      </button>
+      </a>
       <br />
-      <button class="button" onclick="insertTemplate('https://nepa-ab.github.io/Nepa-Templates-Add-in/src/templates/Nepa template with example pictures.pptx')">
+      <a class="button"
+         href="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/templates/Nepa%20template%20with%20example%20pictures.pptx"
+         target="_blank"
+         rel="noopener noreferrer">
         Insert Nepa Template with Example Pictures
-      </button>
+      </a>
     </div>
 
     <div class="section">
       <h2>Backgrounds</h2>
       <div class="background-list">
         <img
-          src="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/backgrounds/background 1.jpg"
+          src="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/backgrounds/background%201.jpg"
           class="background-image"
           alt="Background 1"
           width="80"
@@ -70,7 +79,7 @@
           onclick="insertBackground('background 1.jpg')"
         />
         <img
-          src="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/backgrounds/background 2.jpg"
+          src="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/backgrounds/background%202.jpg"
           class="background-image"
           alt="Background 2"
           width="80"
