@@ -19,6 +19,7 @@
         cursor: pointer;
         font-size: 14px;
         text-align: center;
+        transition: background 0.2s;
       }
       .button:hover {
         background-color: #f8f8f8;
@@ -45,6 +46,7 @@
       .background-list {
         display: flex;
         flex-wrap: wrap;
+        gap: 10px;
         align-items: center;
       }
     </style>
@@ -55,14 +57,16 @@
       <a class="button"
          href="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/templates/Nepa%20empty%20template.pptx"
          target="_blank"
-         rel="noopener noreferrer">
+         rel="noopener noreferrer"
+         download>
         Insert Nepa Empty Template
       </a>
       <br />
       <a class="button"
          href="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/templates/Nepa%20template%20with%20example%20pictures.pptx"
          target="_blank"
-         rel="noopener noreferrer">
+         rel="noopener noreferrer"
+         download>
         Insert Nepa Template with Example Pictures
       </a>
     </div>
@@ -73,7 +77,8 @@
         <img
           src="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/backgrounds/background%201.jpg"
           class="background-image"
-          alt="Background 1"
+          alt="Nepa background 1 preview"
+          aria-label="Apply background 1"
           width="80"
           height="60"
           onclick="insertBackground('background 1.jpg')"
@@ -81,7 +86,8 @@
         <img
           src="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/backgrounds/background%202.jpg"
           class="background-image"
-          alt="Background 2"
+          alt="Nepa background 2 preview"
+          aria-label="Apply background 2"
           width="80"
           height="60"
           onclick="insertBackground('background 2.jpg')"
@@ -89,7 +95,7 @@
       </div>
     </div>
 
-    <div id="notify"></div>
+    <div id="notify" aria-live="polite"></div>
     <script src="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/taskpane/taskpane.js"></script>
   </body>
 </html>
