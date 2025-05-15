@@ -10,35 +10,28 @@ Office.onReady((info) => {
 // Background insertion function
 window.insertBackground = async function(imageName) {
   try {
-    // Compose full, encoded URL:
+    // Compose the full, encoded URL
     const imgUrl = `https://nepa-ab.github.io/Nepa-Templates-Add-in/src/backgrounds/${encodeURIComponent(imageName)}`;
     await PowerPoint.run(async (context) => {
-      const slides = context.presentation.getSelectedSlides();
-      slides.load("items");
-      await context.sync();
+      // Get the active slide (much more reliable)
+      const slide = context.presentation.slides.getActiveSlide();
+      // Insert the background image
+      const shape = slide.shapes.addImage(imgUrl);
 
-      if (slides.items.length > 0) {
-        const slide = slides.items[0];
-        const shape = slide.shapes.addImage(imgUrl);
-        
-        // Optionally cover the whole slide (try to get slideWidth/slideHeight)
-        // These API props may not always be reliable in all Office versions,
-        // If not, slide dimensions are often 960x540 for 16:9 aspect ratio.
-        /*
-        shape.left = 0;
-        shape.top = 0;
-        shape.width = 960;
-        shape.height = 540;
-        */
+      // OPTIONAL: Uncomment for full-slide coverage (960x540 is standard, adjust as needed)
+      // shape.left = 0;
+      // shape.top = 0;
+      // shape.width = 960;
+      // shape.height = 540;
 
-      }
       await context.sync();
     });
     const notify = document.getElementById("notify");
     if (notify) notify.innerText = "Background image inserted onto the slide!";
   } catch (e) {
     const notify = document.getElementById("notify");
-    if (notify) notify.innerText = "Error: " + e;
+    if (notify) notify.innerText = "Error: " + (e.message || e);
+    if (window.console) console.error(e);
   }
 };
 
