@@ -1,38 +1,27 @@
 /* global Office */
 
-// This is required by Office - it ensures APIs are ready
 Office.onReady((info) => {
   if (info.host === Office.HostType.PowerPoint) {
-    // Initialization, if needed
+    // Future: Any extra init
   }
 });
 
-// Background insertion function
-window.insertBackground = async function(imageName) {
-  try {
-    // Compose the full, encoded URL
-    const imgUrl = `https://nepa-ab.github.io/Nepa-Templates-Add-in/src/backgrounds/${encodeURIComponent(imageName)}`;
-    await PowerPoint.run(async (context) => {
-      // Get the active slide (much more reliable)
-      const slide = context.presentation.slides.getActiveSlide();
-      // Insert the background image
-      const shape = slide.shapes.addImage(imgUrl);
-
-      // OPTIONAL: Uncomment for full-slide coverage (960x540 is standard, adjust as needed)
-      // shape.left = 0;
-      // shape.top = 0;
-      // shape.width = 960;
-      // shape.height = 540;
-
-      await context.sync();
-    });
-    const notify = document.getElementById("notify");
-    if (notify) notify.innerText = "Background image inserted onto the slide!";
-  } catch (e) {
-    const notify = document.getElementById("notify");
-    if (notify) notify.innerText = "Error: " + (e.message || e);
-    if (window.console) console.error(e);
-  }
+window.insertBackground = function (imageName) {
+  const imgUrl = `https://nepa-ab.github.io/Nepa-Templates-Add-in/src/backgrounds/${encodeURIComponent(imageName)}`;
+  const notify = document.getElementById("notify");
+  Office.context.document.setSelectedDataAsync(
+    imgUrl,
+    { coercionType: Office.CoercionType.Image },
+    function (asyncResult) {
+      if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
+        if (notify) notify.innerText = "Background image inserted into current slide position!";
+      } else {
+        if (notify) notify.innerText =
+          "Error: " +
+          (asyncResult.error && asyncResult.error.message
+            ? asyncResult.error.message
+            : "Couldn't insert background. Select a placeholder or click in the slide to set position.");
+      }
+    }
+  );
 };
-
-// For future: add insertIcon, insertSlide, etc.
