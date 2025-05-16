@@ -13,10 +13,9 @@ Office.onReady((info) => {
             context.presentation.insertImageFromBase64(base64Image, {
               left: 0,
               top: 0,
-              height: 540,
-              width: 960
+              width: 960,
+              height: 540
             });
-
             await context.sync();
           });
 
@@ -35,7 +34,7 @@ Office.onReady((info) => {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onloadend = () => {
-          const base64data = reader.result.split(',')[1];
+          const base64data = reader.result.split(',')[1]; // Remove prefix
           resolve(base64data);
         };
         reader.onerror = reject;
