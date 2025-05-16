@@ -7,12 +7,13 @@ Office.onReady((info) => {
         const imageUrl = img.src;
 
         try {
+          const base64Image = await fetchImageAsBase64(imageUrl);
+
           await PowerPoint.run(async (context) => {
-            const slide = context.presentation.slides.getSelected();
-            const image = slide.shapes.addImage(imageUrl);
+            const image = context.presentation.slides.getActiveSlide().shapes.addImage(base64Image);
             image.left = 0;
             image.top = 0;
-            image.width = 960; // Adjust as needed
+            image.width = 960; // Adjust to match your slide dimensions
             image.height = 540;
 
             await context.sync();
@@ -25,5 +26,20 @@ Office.onReady((info) => {
         }
       });
     });
+
+    async function fetchImageAsBase64(imageUrl) {
+      const response = await fetch(imageUrl);
+      const blob = await response.blob();
+
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const base64data = reader.result.split(',')[1]; // Remove `data:image/jpeg;base64,`
+          resolve(base64data);
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+    }
   }
 });
