@@ -1,45 +1,29 @@
-/* global Office */
-
-// Wait until Office is initialized
 Office.onReady((info) => {
   if (info.host === Office.HostType.PowerPoint) {
+    console.log("PowerPoint Add-in ready");
+
     document.querySelectorAll('.background-image').forEach(img => {
-      img.addEventListener('click', function () {
-        insertBackground(this.getAttribute('data-imagename'));
+      img.addEventListener('click', async () => {
+        const imageUrl = img.src;
+
+        try {
+          await PowerPoint.run(async (context) => {
+            const slide = context.presentation.slides.getSelected();
+            const image = slide.shapes.addImage(imageUrl);
+            image.left = 0;
+            image.top = 0;
+            image.width = 960; // Adjust as needed
+            image.height = 540;
+
+            await context.sync();
+          });
+
+          document.getElementById("notify").textContent = "Background inserted.";
+        } catch (error) {
+          console.error("Error inserting background:", error);
+          document.getElementById("notify").textContent = "Error inserting background.";
+        }
       });
     });
   }
 });
-
-// Create function in local scope
-function insertBackground(imageName) {
-  const notify = document.getElementById("notify");
-  if (notify) {
-    notify.innerHTML = '<span style="color: #444;">Inserting background image…</span>';
-  }
-  const imgUrl = `https://nepa-ab.github.io/Nepa-Templates-Add-in/src/backgrounds/${encodeURIComponent(imageName)}`;
-  Office.context.document.setSelectedDataAsync(
-    imgUrl,
-    { coercionType: Office.CoercionType.Image },
-    function (asyncResult) {
-      if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
-        if (notify) {
-          notify.innerHTML = '<span style="color:#0a8402">Image <b>inserted!</b> You can resize/move it as needed.</span>';
-        }
-      } else {
-        if (notify) {
-          notify.innerHTML =
-            '<span style="color:#d83114;">' +
-            "Error: " +
-            (asyncResult.error && asyncResult.error.message
-              ? asyncResult.error.message
-              : "Could not insert image. Please select a content placeholder or click a position on the slide, then try again.") +
-            '</span>';
-        }
-      }
-    }
-  );
-}
-
-// Expose only if needed globally
-// window.insertBackground = insertBackground;
