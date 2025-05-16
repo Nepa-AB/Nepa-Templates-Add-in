@@ -4,24 +4,22 @@ Office.onReady((info) => {
 
     document.querySelectorAll('.background-image').forEach(img => {
       img.addEventListener('click', async () => {
-        // Change extension to .png in case image src is still pointing to .jpg
-        const imageUrl = img.src.replace(/\.jpg$/i, '.png');
+        const imageUrl = img.src;
 
         try {
-          const imageBase64Uri = await fetchImageAsBase64(imageUrl); // Full data URI
+          const base64Image = await fetchImageAsBase64(imageUrl);
 
-          Office.context.document.setSelectedDataAsync(imageBase64Uri, {
-            coercionType: Office.CoercionType.Image
-          }, (asyncResult) => {
-            if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
-              document.getElementById("notify").textContent = "Background inserted successfully.";
-              console.log("Image inserted successfully.");
-            } else {
-              console.error("Insert failed:", asyncResult.error);
-              document.getElementById("notify").textContent = "Failed to insert background.";
-            }
+          await PowerPoint.run(async (context) => {
+            const slide = context.presentation.slides.getActiveSlide();
+            const imageShape = slide.shapes.addImage(base64Image);
+            imageShape.left = 0;
+            imageShape.top = 0;
+            imageShape.width = 960;
+            imageShape.height = 540;
+
+            await context.sync();
+            document.getElementById("notify").textContent = "Background inserted successfully.";
           });
-
         } catch (error) {
           console.error("Error inserting background:", error);
           document.getElementById("notify").textContent = "Error inserting background.";
@@ -36,7 +34,9 @@ Office.onReady((info) => {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onloadend = () => {
-          resolve(reader.result); // Use full data URI (includes MIME)
+          // Strip the prefix from data URI
+          const base64data = reader.result.split(',')[1];
+          resolve(base64data);
         };
         reader.onerror = reject;
         reader.readAsDataURL(blob);
@@ -44,5 +44,4 @@ Office.onReady((info) => {
     }
   }
 });
-
 
