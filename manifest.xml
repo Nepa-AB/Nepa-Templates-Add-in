@@ -17,15 +17,11 @@
   <Hosts>
     <Host Name="Presentation"/>
   </Hosts>
-
   <DefaultSettings>
     <SourceLocation DefaultValue="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/taskpane/taskpane.html"/>
   </DefaultSettings>
-
   <Permissions>ReadWriteDocument</Permissions>
-
-  <VersionOverrides xmlns="http://schemas.microsoft.com/office/taskpaneappversionoverrides"
-                    xsi:type="VersionOverridesV1_0">
+  <VersionOverrides xmlns="http://schemas.microsoft.com/office/taskpaneappversionoverrides" xsi:type="VersionOverridesV1_0">
     <Hosts>
       <Host xsi:type="Presentation">
         <DesktopFormFactor>
@@ -65,15 +61,6 @@
         </DesktopFormFactor>
       </Host>
     </Hosts>
-
-    <!-- ✅ Proper Requirements block placed inside VersionOverrides -->
-    <Requirements>
-      <bt:Sets DefaultMinVersion="1.1">
-        <bt:Set Name="SharedRuntime" />
-        <bt:Set Name="PowerPointApi" MinVersion="1.3" />
-      </bt:Sets>
-    </Requirements>
-
     <Resources>
       <bt:Images>
         <bt:Image id="App.Icon" DefaultValue="https://nepa-ab.github.io/Nepa-Templates-Add-in/assets/icon.png"/>
