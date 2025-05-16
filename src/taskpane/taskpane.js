@@ -10,12 +10,13 @@ Office.onReady((info) => {
           const base64Image = await fetchImageAsBase64(imageUrl);
 
           await PowerPoint.run(async (context) => {
-            const slide = context.presentation.slides.getActiveSlide(); // ✅ Correct method
-            const image = slide.shapes.addImage(base64Image);
-            image.left = 0;
-            image.top = 0;
-            image.width = 960;
-            image.height = 540;
+            context.presentation.insertImageFromBase64(base64Image, {
+              left: 0,
+              top: 0,
+              height: 540,
+              width: 960
+            });
+
             await context.sync();
           });
 
@@ -34,7 +35,7 @@ Office.onReady((info) => {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onloadend = () => {
-          const base64data = reader.result.split(',')[1]; // Remove the data prefix
+          const base64data = reader.result.split(',')[1];
           resolve(base64data);
         };
         reader.onerror = reject;
@@ -43,4 +44,3 @@ Office.onReady((info) => {
     }
   }
 });
-
