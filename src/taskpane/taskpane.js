@@ -9,17 +9,18 @@ Office.onReady((info) => {
         try {
           const base64Image = await fetchImageAsBase64(imageUrl);
 
-          await PowerPoint.run(async (context) => {
-            context.presentation.insertImageFromBase64(base64Image, {
-              left: 0,
-              top: 0,
-              width: 960,
-              height: 540
-            });
-            await context.sync();
-          });
+          const imageBase64Uri = "data:image/jpeg;base64," + base64Image;
 
-          document.getElementById("notify").textContent = "Background inserted.";
+          Office.context.document.setSelectedDataAsync(imageBase64Uri, {
+            coercionType: Office.CoercionType.Image
+          }, function (asyncResult) {
+            if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
+              document.getElementById("notify").textContent = "Background inserted.";
+            } else {
+              console.error("Insertion failed: ", asyncResult.error.message);
+              document.getElementById("notify").textContent = "Error inserting background.";
+            }
+          });
         } catch (error) {
           console.error("Error inserting background:", error);
           document.getElementById("notify").textContent = "Error inserting background.";
@@ -34,7 +35,7 @@ Office.onReady((info) => {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onloadend = () => {
-          const base64data = reader.result.split(',')[1]; // Remove prefix
+          const base64data = reader.result.split(',')[1]; // Strip data:image/jpeg;base64,
           resolve(base64data);
         };
         reader.onerror = reject;
