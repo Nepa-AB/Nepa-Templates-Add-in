@@ -4,7 +4,8 @@ Office.onReady((info) => {
 
     document.querySelectorAll('.background-image').forEach(img => {
       img.addEventListener('click', async () => {
-        const imageUrl = img.src;
+        // Change extension to .png in case image src is still pointing to .jpg
+        const imageUrl = img.src.replace(/\.jpg$/i, '.png');
 
         try {
           const imageBase64Uri = await fetchImageAsBase64(imageUrl); // Full data URI
@@ -35,7 +36,7 @@ Office.onReady((info) => {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onloadend = () => {
-          resolve(reader.result); // Use full data URI
+          resolve(reader.result); // Use full data URI (includes MIME)
         };
         reader.onerror = reject;
         reader.readAsDataURL(blob);
