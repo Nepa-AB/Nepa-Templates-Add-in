@@ -7,13 +7,8 @@ Office.onReady((info) => {
         const imageUrl = img.src;
 
         try {
-          const base64Image = await fetchImageAsBase64(imageUrl);
+          const imageBase64Uri = await fetchImageAsBase64(imageUrl); // Full data URI
 
-          // Full Data URI (important: include MIME type)
-          const imageBase64Uri = "data:image/jpeg;base64," + base64Image;
-          console.log("Base64 Image URI:", imageBase64Uri);
-
-          // Insert image using Office.js
           Office.context.document.setSelectedDataAsync(imageBase64Uri, {
             coercionType: Office.CoercionType.Image
           }, (asyncResult) => {
@@ -40,10 +35,7 @@ Office.onReady((info) => {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onloadend = () => {
-          const dataUrl = reader.result;
-          console.log("Full Data URI for testing:", dataUrl); // For manual testing
-          const base64data = dataUrl.split(',')[1]; // Strip 'data:image/jpeg;base64,'
-          resolve(base64data);
+          resolve(reader.result); // Use full data URI
         };
         reader.onerror = reject;
         reader.readAsDataURL(blob);
