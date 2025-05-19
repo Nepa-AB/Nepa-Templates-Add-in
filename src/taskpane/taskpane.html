@@ -18,7 +18,6 @@
         margin: 6px 0;
         cursor: pointer;
         font-size: 14px;
-        text-align: center;
       }
       .button:hover {
         background-color: #f8f8f8;
@@ -30,8 +29,11 @@
         background-color: #f5f7fa;
         border-radius: 6px;
       }
-      .section {
-        margin-bottom: 28px;
+      .background-list {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        margin-top: 10px;
       }
       .background-image {
         margin: 5px;
@@ -39,15 +41,12 @@
         border-radius: 6px;
         border: 2px solid transparent;
         transition: border 0.2s;
-        outline: none;
       }
       .background-image:hover, .background-image:focus {
         border: 2px solid #0079d4;
       }
-      .background-list {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
+      .image-section {
+        display: none;
       }
     </style>
     <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
@@ -55,7 +54,7 @@
   </head>
   <body>
     <!-- Templates -->
-    <div class="section">
+    <div>
       <h2>Templates</h2>
       <a class="button"
          href="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/templates/Nepa%20empty%20template.pptx"
@@ -72,118 +71,71 @@
       </a>
     </div>
 
-    <!-- Backgrounds -->
-    <div class="section">
-      <h2>Backgrounds</h2>
+    <!-- Image Category Selector -->
+    <div style="margin-top: 28px;">
+      <h2>Insert Image</h2>
+      <label for="imageCategory">Choose Image Type:</label>
+      <select id="imageCategory" style="margin-left: 10px; padding: 4px;">
+        <option value="backgrounds">Backgrounds</option>
+        <option value="half">Half Page Images</option>
+        <option value="thin">Thin Images</option>
+      </select>
+    </div>
+
+    <!-- Background Images -->
+    <div id="backgrounds" class="image-section">
       <div class="background-list">
-        <img
-          src="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/backgrounds/background%201.png"
-          class="background-image"
-          alt="Background 1"
-          draggable="true"
-          width="80"
-          height="60"
-        />
-        <img
-          src="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/backgrounds/background%202.png"
-          class="background-image"
-          alt="Background 2"
-          draggable="true"
-          width="80"
-          height="60"
-        />
+        <img src="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/backgrounds/background%201.png" class="background-image" alt="Background 1" draggable="true" width="80" height="60" />
+        <img src="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/backgrounds/background%202.png" class="background-image" alt="Background 2" draggable="true" width="80" height="60" />
       </div>
-      <div style="margin-top: 4px; font-size: 12px; color: #666;">
-        <em>Tip:</em> Drag and drop a background onto your slide. It keeps original size and can be manually stretched.
+      <div style="font-size: 12px; color: #666;">
+        <em>Tip:</em> Drag and drop a background onto your slide. It keeps original size.
       </div>
     </div>
 
-    <!-- Images -->
-    <div class="section">
-      <h2>Images</h2>
+    <!-- Half Page Images -->
+    <div id="half" class="image-section">
       <div class="background-list">
-        <!-- Half Page -->
-        <img src="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/Images/half%20page%201.jpg"
-             class="background-image"
-             alt="Half Page 1"
-             draggable="true"
-             width="80"
-             height="60" />
-        <img src="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/Images/half%20page%202.jpg"
-             class="background-image"
-             alt="Half Page 2"
-             draggable="true"
-             width="80"
-             height="60" />
-        <img src="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/Images/half%20page%203.jpg"
-             class="background-image"
-             alt="Half Page 3"
-             draggable="true"
-             width="80"
-             height="60" />
-        <img src="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/Images/half%20page%204.jpg"
-             class="background-image"
-             alt="Half Page 4"
-             draggable="true"
-             width="80"
-             height="60" />
-        <img src="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/Images/half%20page%205.jpg"
-             class="background-image"
-             alt="Half Page 5"
-             draggable="true"
-             width="80"
-             height="60" />
-        <img src="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/Images/half%20page%206.jpg"
-             class="background-image"
-             alt="Half Page 6"
-             draggable="true"
-             width="80"
-             height="60" />
-
-        <!-- Thin Images -->
-        <img src="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/Images/thin%20image%201.jpg"
-             class="background-image"
-             alt="Thin Image 1"
-             draggable="true"
-             width="80"
-             height="60" />
-        <img src="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/Images/thin%20image%202.jpg"
-             class="background-image"
-             alt="Thin Image 2"
-             draggable="true"
-             width="80"
-             height="60" />
-        <img src="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/Images/thin%20image%203.jpg"
-             class="background-image"
-             alt="Thin Image 3"
-             draggable="true"
-             width="80"
-             height="60" />
-        <img src="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/Images/thin%20image%204.jpg"
-             class="background-image"
-             alt="Thin Image 4"
-             draggable="true"
-             width="80"
-             height="60" />
-        <img src="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/Images/thin%20image%205.jpg"
-             class="background-image"
-             alt="Thin Image 5"
-             draggable="true"
-             width="80"
-             height="60" />
-        <img src="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/Images/thin%20image%206.jpg"
-             class="background-image"
-             alt="Thin Image 6"
-             draggable="true"
-             width="80"
-             height="60" />
+        <!-- half page 1-6 -->
+        ${[1, 2, 3, 4, 5, 6].map(i => `
+          <img src="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/Images/half%20page%20${i}.jpg"
+               class="background-image"
+               alt="Half Page ${i}"
+               draggable="true"
+               width="80" height="60" />
+        `).join('')}
       </div>
-      <div style="margin-top: 4px; font-size: 12px; color: #666;">
-        <em>Tip:</em> Drag and drop into your slide. Images retain their original size.
+    </div>
+
+    <!-- Thin Images -->
+    <div id="thin" class="image-section">
+      <div class="background-list">
+        <!-- thin image 1-6 -->
+        ${[1, 2, 3, 4, 5, 6].map(i => `
+          <img src="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/Images/thin%20image%20${i}.jpg"
+               class="background-image"
+               alt="Thin Image ${i}"
+               draggable="true"
+               width="80" height="60" />
+        `).join('')}
       </div>
     </div>
 
     <div id="notify" role="status" aria-live="polite"></div>
+
+    <script>
+      // Show default section
+      document.getElementById('backgrounds').style.display = 'block';
+
+      // Dropdown logic
+      document.getElementById('imageCategory').addEventListener('change', function () {
+        document.querySelectorAll('.image-section').forEach(section => {
+          section.style.display = 'none';
+        });
+        const selected = this.value;
+        document.getElementById(selected).style.display = 'block';
+      });
+    </script>
   </body>
 </html>
 
