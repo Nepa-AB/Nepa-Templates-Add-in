@@ -1,157 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Nepa Templates Add-in</title>
-  <link rel="stylesheet" href="taskpane.css" />
-  <style>
-    body { font-family: Arial, sans-serif; padding: 20px; }
-    h2 { margin-top: 24px; }
-    .button {
-      display: inline-block;
-      text-decoration: none;
-      padding: 8px 16px;
-      background-color: #ff8b00;
-      color: black;
-      border: none;
-      border-radius: 4px;
-      margin: 6px 0;
-      cursor: pointer;
-      font-size: 14px;
-      text-align: center;
-    }
-    .button:hover {
-      background-color: #f8f8f8;
-    }
-    #notify {
-      margin-top: 24px;
-      padding: 10px;
-      min-height: 32px;
-      background-color: #f5f7fa;
-      border-radius: 6px;
-    }
-    .section {
-      margin-bottom: 28px;
-    }
-    .background-image {
-      margin: 5px;
-      cursor: grab;
-      border-radius: 6px;
-      border: 2px solid transparent;
-      transition: border 0.2s;
-      outline: none;
-    }
-    .background-image:hover,
-    .background-image:focus {
-      border: 2px solid #0079d4;
-    }
-    .background-list {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-    .image-section {
-      display: none;
-      margin-top: 12px;
-    }
-    select {
-      padding: 6px;
-      border-radius: 4px;
-      font-size: 14px;
-      margin-bottom: 12px;
-    }
-  </style>
-  <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
-  <script defer src="taskpane.js"></script>
-</head>
-<body>
-  <div class="section">
-    <h2>Templates</h2>
-    <a class="button"
-       href="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/templates/Nepa%20empty%20template.pptx"
-       target="_blank"
-       rel="noopener noreferrer">
-      Insert Nepa Empty Template
-    </a>
-    <br />
-    <a class="button"
-       href="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/templates/Nepa%20template%20with%20example%20pictures.pptx"
-       target="_blank"
-       rel="noopener noreferrer">
-      Insert Nepa Template with Example Pictures
-    </a>
-  </div>
-
-  <div class="section">
-    <h2>Images</h2>
-    <label for="imageCategory">Choose a category:</label>
-    <select id="imageCategory">
-      <option value="backgrounds">Backgrounds</option>
-      <option value="half">Half Page Images</option>
-      <option value="thin">Thin Images</option>
-    </select>
-
-    <!-- Backgrounds -->
-    <div id="backgrounds" class="image-section">
-      <div class="background-list">
-        <img src="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/backgrounds/background%201.png" class="background-image" alt="Background 1" draggable="true" width="80" height="60" />
-        <img src="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/backgrounds/background%202.png" class="background-image" alt="Background 2" draggable="true" width="80" height="60" />
-      </div>
-      <div style="font-size: 12px; color: #666;">
-        <em>Tip:</em> Drag and drop a background onto your slide. It keeps original size.
-      </div>
-    </div>
-
-    <!-- Half Page Images -->
-    <div id="half" class="image-section">
-      <div class="background-list">
-        <img src="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/Images/half%20page%201.jpg" class="background-image" alt="Half Page 1" draggable="true" width="80" height="60" />
-        <img src="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/Images/half%20page%202.jpg" class="background-image" alt="Half Page 2" draggable="true" width="80" height="60" />
-        <img src="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/Images/half%20page%203.jpg" class="background-image" alt="Half Page 3" draggable="true" width="80" height="60" />
-        <img src="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/Images/half%20page%204.jpg" class="background-image" alt="Half Page 4" draggable="true" width="80" height="60" />
-        <img src="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/Images/half%20page%205.jpg" class="background-image" alt="Half Page 5" draggable="true" width="80" height="60" />
-        <img src="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/Images/half%20page%206.jpg" class="background-image" alt="Half Page 6" draggable="true" width="80" height="60" />
-      </div>
-      <div style="font-size: 12px; color: #666;">
-        <em>Tip:</em> Drag and drop a background onto your slide. It keeps original size.
-      </div>
-    </div>
-
-    <!-- Thin Images -->
-    <div id="thin" class="image-section">
-      <div class="background-list">
-        <img src="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/Images/thin%20image%201.jpg" class="background-image" alt="Thin Image 1" draggable="true" width="80" height="60" />
-        <img src="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/Images/thin%20image%202.jpg" class="background-image" alt="Thin Image 2" draggable="true" width="80" height="60" />
-        <img src="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/Images/thin%20image%203.jpg" class="background-image" alt="Thin Image 3" draggable="true" width="80" height="60" />
-        <img src="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/Images/thin%20image%204.jpg" class="background-image" alt="Thin Image 4" draggable="true" width="80" height="60" />
-        <img src="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/Images/thin%20image%205.jpg" class="background-image" alt="Thin Image 5" draggable="true" width="80" height="60" />
-        <img src="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/Images/thin%20image%206.jpg" class="background-image" alt="Thin Image 6" draggable="true" width="80" height="60" />
-      </div>
-      <div style="font-size: 12px; color: #666;">
-        <em>Tip:</em> Drag and drop a background onto your slide. It keeps original size.
-      </div>
-    </div>
-  </div>
-
-  <div id="notify" role="status" aria-live="polite"></div>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const selector = document.getElementById('imageCategory');
-      const sections = {
-        backgrounds: document.getElementById('backgrounds'),
-        half: document.getElementById('half'),
-        thin: document.getElementById('thin')
-      };
-
-      function updateSection() {
-        Object.values(sections).forEach(s => s.style.display = 'none');
-        sections[selector.value].style.display = 'block';
+  <head>
+    <meta charset="UTF-8" />
+    <title>Nepa Templates Add-in</title>
+    <link rel="stylesheet" href="taskpane.css" />
+    <style>
+      body { font-family: Arial, sans-serif; padding: 20px; }
+      h2 { margin-top: 24px; }
+      .button {
+        display: inline-block;
+        text-decoration: none;
+        padding: 8px 16px;
+        background-color: #ff8b00;
+        color: black;
+        border: none;
+        border-radius: 4px;
+        margin: 6px 0;
+        cursor: pointer;
+        font-size: 14px;
+        text-align: center;
       }
+      .button:hover { background-color: #f8f8f8; }
+      #notify {
+        margin-top: 24px;
+        padding: 10px;
+        min-height: 32px;
+        background-color: #f5f7fa;
+        border-radius: 6px;
+      }
+      .section { margin-bottom: 28px; }
+      .background-image {
+        margin: 5px;
+        cursor: grab;
+        border-radius: 6px;
+        border: 2px solid transparent;
+        transition: border 0.2s;
+        outline: none;
+      }
+      .background-image:hover, .background-image:focus {
+        border: 2px solid #0079d4;
+      }
+      .image-list {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .tip {
+        margin-top: 4px;
+        font-size: 12px;
+        color: #666;
+      }
+    </style>
+    <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+    <script defer src="taskpane.js"></script>
+  </head>
 
-      selector.addEventListener('change', updateSection);
-      updateSection(); // Initial
-    });
-  </script>
-</body>
+  <body>
+    <div class="section">
+      <h2>Templates</h2>
+      <a class="button"
+         href="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/templates/Nepa%20empty%20template.pptx"
+         target="_blank"
+         rel="noopener noreferrer">
+        Insert Nepa Empty Template
+      </a>
+      <br />
+      <a class="button"
+         href="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/templates/Nepa%20template%20with%20example%20pictures.pptx"
+         target="_blank"
+         rel="noopener noreferrer">
+        Insert Nepa Template with Example Pictures
+      </a>
+    </div>
+
+    <div class="section">
+      <h2>Images</h2>
+      <label for="image-category">Select Category:</label>
+      <select id="image-category">
+        <option value="backgrounds">Backgrounds</option>
+        <option value="half-page">Half Page Images</option>
+        <option value="thin-images">Thin Images</option>
+      </select>
+
+      <div id="image-container" class="image-list"></div>
+      <div class="tip"><em>Tip:</em> Drag and drop an image onto your slide or right-click and paste it. It will keep its original size and aspect ratio.</div>
+    </div>
+
+    <div id="notify" role="status" aria-live="polite"></div>
+  </body>
 </html>
