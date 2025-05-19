@@ -1,24 +1,16 @@
-// Called when Office is ready
-Office.onReady((info) => {
-  if (info.host === Office.HostType.PowerPoint) {
-    console.log("PowerPoint Add-in ready");
-    // No need to bind click events — drag-and-drop handles everything now
-  }
+Office.onReady(() => {
+  console.log("Nepa Templates Add-in is ready");
+
+  const images = document.querySelectorAll(".background-image");
+
+  images.forEach(img => {
+    img.addEventListener("dragstart", (event) => {
+      // This triggers PowerPoint to download the image when dropped
+      const imageUrl = img.src;
+      const imageName = img.alt || "background.png";
+
+      event.dataTransfer.setData("DownloadURL", `image/png:${imageName}:${imageUrl}`);
+      console.log(`Dragging ${imageName}`);
+    });
+  });
 });
-
-// Global drag handler
-function handleDragStart(event) {
-  const imageUrl = event.target.src;
-
-  // Set both URI list and plain text formats
-  event.dataTransfer.setData("text/uri-list", imageUrl);
-  event.dataTransfer.setData("text/plain", imageUrl);
-
-  // Optional: set drag preview
-  const img = new Image();
-  img.src = imageUrl;
-  event.dataTransfer.setDragImage(img, 10, 10);
-
-  console.log("Dragging image:", imageUrl);
-}
-
