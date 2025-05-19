@@ -1,20 +1,19 @@
-Office.onReady(() => {
-  console.log("Nepa Templates Add-in is ready");
+Office.onReady((info) => {
+  if (info.host === Office.HostType.PowerPoint) {
+    console.log("PowerPoint Add-in ready");
 
-  const images = document.querySelectorAll(".background-image");
+    document.querySelectorAll('.background-image').forEach(img => {
+      img.setAttribute('draggable', true);
 
-  images.forEach(img => {
-    img.setAttribute("draggable", "true");
+      img.addEventListener('dragstart', (event) => {
+        const imageUrl = img.src;
+        const imageName = img.getAttribute('data-imagename') || 'background.png';
 
-    img.addEventListener("dragstart", (event) => {
-      const imageUrl = img.src;
-      const imageName = img.getAttribute("alt") || "background.png";
+        const downloadURL = `image/png:${imageName}:${imageUrl}`;
+        event.dataTransfer.setData('DownloadURL', downloadURL);
 
-      // Format: <mime>:<filename>:<url>
-      const downloadURL = `image/png:${imageName}:${imageUrl}`;
-      event.dataTransfer.setData("DownloadURL", downloadURL);
-
-      console.log(`Dragging image: ${downloadURL}`);
+        console.log("Dragging image:", downloadURL);
+      });
     });
-  });
+  }
 });
