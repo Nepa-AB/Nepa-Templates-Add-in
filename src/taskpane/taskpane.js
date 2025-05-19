@@ -4,13 +4,17 @@ Office.onReady(() => {
   const images = document.querySelectorAll(".background-image");
 
   images.forEach(img => {
-    img.addEventListener("dragstart", (event) => {
-      // This triggers PowerPoint to download the image when dropped
-      const imageUrl = img.src;
-      const imageName = img.alt || "background.png";
+    img.setAttribute("draggable", "true");
 
-      event.dataTransfer.setData("DownloadURL", `image/png:${imageName}:${imageUrl}`);
-      console.log(`Dragging ${imageName}`);
+    img.addEventListener("dragstart", (event) => {
+      const imageUrl = img.src;
+      const imageName = img.getAttribute("alt") || "background.png";
+
+      // Format: <mime>:<filename>:<url>
+      const downloadURL = `image/png:${imageName}:${imageUrl}`;
+      event.dataTransfer.setData("DownloadURL", downloadURL);
+
+      console.log(`Dragging image: ${downloadURL}`);
     });
   });
 });
