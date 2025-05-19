@@ -35,7 +35,7 @@
       }
       .background-image {
         margin: 5px;
-        cursor: pointer;
+        cursor: grab;
         border-radius: 6px;
         border: 2px solid transparent;
         transition: border 0.2s;
@@ -50,7 +50,6 @@
         align-items: center;
       }
     </style>
-    <!-- Office.js MUST be included before your script -->
     <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
     <script defer src="taskpane.js"></script>
   </head>
@@ -79,28 +78,27 @@
           src="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/backgrounds/background%201.png"
           class="background-image"
           alt="Background 1"
-          data-imagename="background 1.png"
+          draggable="true"
+          ondragstart="handleDragStart(event)"
           width="80"
           height="60"
-          aria-label="Insert background 1"
-          tabindex="0"
         />
         <img
           src="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/backgrounds/background%202.png"
           class="background-image"
           alt="Background 2"
-          data-imagename="background 2.png"
+          draggable="true"
+          ondragstart="handleDragStart(event)"
           width="80"
           height="60"
-          aria-label="Insert background 2"
-          tabindex="0"
         />
       </div>
       <div style="margin-top: 4px; font-size: 12px; color: #666;">
-        <em>Tip:</em> After inserting a background image, you can manually stretch it to fill the slide.
+        <em>Tip:</em> Drag an image onto your slide to insert it as a background.
       </div>
     </div>
 
     <div id="notify" role="status" aria-live="polite"></div>
   </body>
 </html>
+
