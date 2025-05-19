@@ -6,13 +6,8 @@ Office.onReady((info) => {
       img.setAttribute('draggable', true);
 
       img.addEventListener('dragstart', (event) => {
-        const imageUrl = img.src;
-        const imageName = img.getAttribute('data-imagename') || 'background.png';
-
-        const downloadURL = `image/png:${imageName}:${imageUrl}`;
-        event.dataTransfer.setData('DownloadURL', downloadURL);
-
-        console.log("Dragging image:", downloadURL);
+        console.log("Native drag started for image:", img.src);
+        // No need to set dataTransfer manually — browser handles image drag
       });
     });
   }
