@@ -1,81 +1,77 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const imageCategory = document.getElementById("imageCategory");
-  const imageContainer = document.getElementById("imageContainer");
-
-  const slideCategory = document.getElementById("slideCategory");
-  const slidesContainer = document.getElementById("slidesContainer");
-
-  function renderImages(category) {
-    imageContainer.innerHTML = "";
-    let imageList = [];
-
-    if (category === "backgrounds") {
-      imageList = Array.from({ length: 6 }, (_, i) => `backgrounds/background ${i + 1}.png`);
-    } else if (category === "halfpage") {
-      imageList = Array.from({ length: 6 }, (_, i) => `Images/half page ${i + 1}.jpg`);
-    } else if (category === "thin") {
-      imageList = Array.from({ length: 6 }, (_, i) => `Images/thin image ${i + 1}.jpg`);
-    }
-
-    imageList.forEach((src) => {
-      const img = document.createElement("img");
-      img.src = `https://nepa-ab.github.io/Nepa-Templates-Add-in/src/${src}`;
-      img.alt = src;
-      img.draggable = true;
-
-      img.addEventListener("dragstart", (e) => {
-        e.dataTransfer.setData("text/uri-list", img.src);
-        console.log("Dragging image:", img.src);
-      });
-
-      imageContainer.appendChild(img);
-    });
-  }
-
-  function renderSlidePreviews(category) {
-    slidesContainer.innerHTML = "";
-
-    let previews = [];
-    if (category === "arrows") {
-      previews = [1, 2].map(i => ({
-        src: `https://nepa-ab.github.io/Nepa-Templates-Add-in/src/slides-previews/Arrows, Numbers, Symbols, Banners/slide${i}.jpg`,
-        pptx: `https://nepa-ab.github.io/Nepa-Templates-Add-in/src/slides/Arrows, Numbers, Symbols, Banners.pptx`,
-        index: i
-      }));
-    } else if (category === "assets") {
-      previews = Array.from({ length: 10 }, (_, i) => ({
-        src: `https://nepa-ab.github.io/Nepa-Templates-Add-in/src/slides-previews/Assets/slide${i + 1}.jpg`,
-        pptx: `https://nepa-ab.github.io/Nepa-Templates-Add-in/src/slides/Assets.pptx`,
-        index: i + 1
-      }));
-    }
-
-    previews.forEach(({ src, pptx, index }) => {
-      const img = document.createElement("img");
-      img.src = src;
-      img.alt = `Slide ${index}`;
-      img.classList.add("slide-preview");
-
-      img.addEventListener("click", () => {
-        Office.context.presentation.insertSlidesFromBase64Url(pptx, {
-          formatting: Office.ImageFormatting.MatchDestination,
-          position: 0
-        }, (result) => {
-          if (result.status === Office.AsyncResultStatus.Failed) {
-            console.error("Error inserting slide:", result.error.message);
-            alert("Unable to insert slide. Please try again.");
-          }
-        });
-      });
-
-      slidesContainer.appendChild(img);
-    });
-  }
-
-  imageCategory.addEventListener("change", () => renderImages(imageCategory.value));
-  slideCategory.addEventListener("change", () => renderSlidePreviews(slideCategory.value));
-
-  renderImages("backgrounds");
-  renderSlidePreviews("arrows");
+Office.onReady(() => {
+  document.getElementById('imageCategory').addEventListener('change', renderImages);
+  document.getElementById('slideCategory').addEventListener('change', renderSlides);
+  renderImages();
+  renderSlides();
 });
 
+// Image rendering
+function renderImages() {
+  const container = document.getElementById('imageContainer');
+  container.innerHTML = '';
+  const category = document.getElementById('imageCategory').value;
+
+  let images = [];
+
+  if (category === 'backgrounds') {
+    images = ['background 1.png', 'background 2.png'].map(name =>
+      `https://nepa-ab.github.io/Nepa-Templates-Add-in/src/backgrounds/${name}`
+    );
+  } else if (category === 'halfpage') {
+    images = [1, 2, 3, 4, 5, 6].map(i =>
+      `https://nepa-ab.github.io/Nepa-Templates-Add-in/src/Images/half page ${i}.jpg`
+    );
+  } else if (category === 'thin') {
+    images = [1, 2, 3, 4, 5, 6].map(i =>
+      `https://nepa-ab.github.io/Nepa-Templates-Add-in/src/Images/thin image ${i}.jpg`
+    );
+  }
+
+  images.forEach(url => {
+    const img = document.createElement('img');
+    img.src = url;
+    img.draggable = true;
+    img.addEventListener('dragstart', (e) => {
+      e.dataTransfer.setData('text/plain', url);
+    });
+    container.appendChild(img);
+  });
+}
+
+// Slides rendering
+function renderSlides() {
+  const slidesContainer = document.getElementById('slidesContainer');
+  slidesContainer.innerHTML = '';
+  const selection = document.getElementById('slideCategory').value;
+
+  let previews = [];
+  let pptxUrl = '';
+
+  if (selection === 'arrows') {
+    pptxUrl = 'https://nepa-ab.github.io/Nepa-Templates-Add-in/src/slides/Arrows, Numbers, Symbols, Banners.pptx';
+    previews = [1, 2].map(i =>
+      `https://nepa-ab.github.io/Nepa-Templates-Add-in/src/slides-previews/Arrows, Numbers, Symbols, Banners/slide${i}.jpg`
+    );
+  } else if (selection === 'assets') {
+    pptxUrl = 'https://nepa-ab.github.io/Nepa-Templates-Add-in/src/slides/Assets.pptx';
+    previews = Array.from({ length: 10 }, (_, i) =>
+      `https://nepa-ab.github.io/Nepa-Templates-Add-in/src/slides-previews/Assets/slide${i + 1}.jpg`
+    );
+  }
+
+  previews.forEach((url, index) => {
+    const img = document.createElement('img');
+    img.src = url;
+    img.title = `Insert slide ${index + 1}`;
+    img.addEventListener('click', async () => {
+      await insertSlideFromPptx(pptxUrl, index);
+    });
+    slidesContainer.appendChild(img);
+  });
+}
+
+// Placeholder for inserting slide (to be implemented later)
+async function insertSlideFromPptx(pptxUrl, slideIndex) {
+  console.log(`Would insert slide ${slideIndex + 1} from ${pptxUrl}`);
+  alert('Slide insertion will be available in a future version. For now, please copy and paste the desired slide manually.');
+}
