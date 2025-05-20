@@ -1,91 +1,44 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Nepa Templates Add-in</title>
-    <link rel="stylesheet" href="taskpane.css" />
-    <style>
-      body { font-family: Arial, sans-serif; padding: 20px; }
-      h2 { margin-top: 24px; }
-      .button {
-        display: inline-block;
-        text-decoration: none;
-        padding: 8px 16px;
-        background-color: #ff8b00;
-        color: black;
-        border: none;
-        border-radius: 4px;
-        margin: 6px 0;
-        cursor: pointer;
-        font-size: 14px;
-        text-align: center;
-      }
-      .button:hover { background-color: #f8f8f8; }
-      #notify {
-        margin-top: 24px;
-        padding: 10px;
-        min-height: 32px;
-        background-color: #f5f7fa;
-        border-radius: 6px;
-      }
-      .section { margin-bottom: 28px; }
-      .background-image {
-        margin: 5px;
-        cursor: grab;
-        border-radius: 6px;
-        border: 2px solid transparent;
-        transition: border 0.2s;
-        outline: none;
-      }
-      .background-image:hover, .background-image:focus {
-        border: 2px solid #0079d4;
-      }
-      .image-list {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-      }
-      .tip {
-        margin-top: 4px;
-        font-size: 12px;
-        color: #666;
-      }
-    </style>
-    <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
-    <script defer src="taskpane.js"></script>
-  </head>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Nepa Templates Add-in</title>
+  <link rel="stylesheet" href="taskpane.css" />
+</head>
+<body>
+  <h1>Nepa Templates</h1>
 
-  <body>
-    <div class="section">
-      <h2>Templates</h2>
-      <a class="button"
-         href="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/templates/Nepa%20empty%20template.pptx"
-         target="_blank"
-         rel="noopener noreferrer">
-        Insert Nepa Empty Template
-      </a>
-      <br />
-      <a class="button"
-         href="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/templates/Nepa%20template%20with%20example%20pictures.pptx"
-         target="_blank"
-         rel="noopener noreferrer">
-        Insert Nepa Template with Example Pictures
-      </a>
-    </div>
+  <!-- Templates Section -->
+  <h2>Templates</h2>
+  <div class="image-grid">
+    <a href="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/templates/template1.pptx" target="_blank">
+      <img src="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/templates/template1.jpg" class="template-img" />
+    </a>
+    <a href="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/templates/template2.pptx" target="_blank">
+      <img src="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/templates/template2.jpg" class="template-img" />
+    </a>
+  </div>
 
-    <div class="section">
-      <h2>Images</h2>
-      <label for="image-category">Select Category:</label>
-      <select id="image-category">
-        <option value="backgrounds">Backgrounds</option>
-        <option value="half-page">Half Page Images</option>
-        <option value="thin-images">Thin Images</option>
-      </select>
+  <!-- Images Section -->
+  <h2>Images</h2>
+  <select id="image-category">
+    <option value="backgrounds">Backgrounds</option>
+    <option value="half">Half Page</option>
+    <option value="thin">Thin Images</option>
+  </select>
+  <p class="tip-message">Tip: Drag and drop an image onto your slide. It keeps original size.</p>
+  <div id="image-grid" class="image-grid"></div>
 
-      <div id="image-container" class="image-list"></div>
-      <div class="tip"><em>Tip:</em> Drag and drop an image onto your slide or right-click and paste it. It will keep its original size and aspect ratio.</div>
-    </div>
+  <!-- Slides Section -->
+  <h2>Slides</h2>
+  <select id="slides-dropdown">
+    <option value="">Select a category...</option>
+    <option value="Arrows, Numbers, Symbols, Banners">Arrows, Numbers, Symbols, Banners</option>
+    <option value="Assets">Assets</option>
+  </select>
+  <div id="slides-previews" class="image-grid"></div>
 
-    <div id="notify" role="status" aria-live="polite"></div>
-  </body>
+  <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+  <script src="taskpane.js"></script>
+</body>
 </html>
