@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Nepa Templates Add-in</title>
-  <link rel="stylesheet" href="../styles/styles.css" />
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <div class="section">
@@ -17,26 +17,26 @@
 
   <div class="section">
     <h2>Backgrounds & Images</h2>
-    <label for="imageCategory">Select Category:</label>
+    <label for="imageCategory">Choose image type:</label>
     <select id="imageCategory">
       <option value="backgrounds">Backgrounds</option>
       <option value="half">Half Page Images</option>
       <option value="thin">Thin Images</option>
     </select>
-    <p class="tip">Tip: Drag and drop an image onto your slide. It keeps original size.</p>
-    <div class="image-container" id="imageContainer"></div>
+    <p>Tip: Drag and drop a background onto your slide. It keeps original size.</p>
+    <div id="imageContainer" class="image-container"></div>
   </div>
 
   <div class="section">
     <h2>Slides</h2>
-    <label for="slideCategory">Select Slide Category:</label>
+    <label for="slideCategory">Choose slide pack:</label>
     <select id="slideCategory">
       <option value="Arrows, Numbers, Symbols, Banners">Arrows, Numbers, Symbols, Banners</option>
       <option value="Assets">Assets</option>
     </select>
-    <div class="slide-previews" id="slidePreviews"></div>
+    <div id="slidePreviews" class="slide-previews"></div>
   </div>
 
-  <script src="../scripts/taskpane.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
