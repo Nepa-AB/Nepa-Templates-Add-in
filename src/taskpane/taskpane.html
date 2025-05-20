@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Nepa Templates Add-in</title>
   <link rel="stylesheet" href="taskpane.css" />
+  <!-- Office.js MUST be loaded before your scripts -->
+  <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
 </head>
 <body>
   <div class="section">
@@ -37,6 +39,7 @@
     <div id="slidePreviews" class="slide-previews"></div>
   </div>
 
+  <!-- Your script must be loaded AFTER office.js -->
   <script src="taskpane.js"></script>
 </body>
 </html>
