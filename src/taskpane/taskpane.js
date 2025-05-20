@@ -15,15 +15,15 @@ function renderImages() {
 
   if (category === 'backgrounds') {
     images = ['background 1.png', 'background 2.png'].map(name =>
-      `https://nepa-ab.github.io/Nepa-Templates-Add-in/src/backgrounds/${name}`
+      `https://nepa-ab.github.io/Nepa-Templates-Add-in/src/backgrounds/${encodeURIComponent(name)}`
     );
   } else if (category === 'halfpage') {
     images = [1, 2, 3, 4, 5, 6].map(i =>
-      `https://nepa-ab.github.io/Nepa-Templates-Add-in/src/Images/half page ${i}.jpg`
+      `https://nepa-ab.github.io/Nepa-Templates-Add-in/src/Images/${encodeURIComponent('half page ' + i + '.jpg')}`
     );
   } else if (category === 'thin') {
     images = [1, 2, 3, 4, 5, 6].map(i =>
-      `https://nepa-ab.github.io/Nepa-Templates-Add-in/src/Images/thin image ${i}.jpg`
+      `https://nepa-ab.github.io/Nepa-Templates-Add-in/src/Images/${encodeURIComponent('thin image ' + i + '.jpg')}`
     );
   }
 
@@ -70,7 +70,7 @@ function renderSlides() {
   });
 }
 
-// Placeholder for inserting slide (to be implemented later)
+// Placeholder for inserting slide (future implementation)
 async function insertSlideFromPptx(pptxUrl, slideIndex) {
   console.log(`Would insert slide ${slideIndex + 1} from ${pptxUrl}`);
   alert('Slide insertion will be available in a future version. For now, please copy and paste the desired slide manually.');
