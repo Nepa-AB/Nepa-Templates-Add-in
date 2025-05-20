@@ -10,12 +10,12 @@ document.addEventListener("DOMContentLoaded", function () {
       "backgrounds/background 2.png"
     ],
     half: [
-      "Images/half page 1.jpg",
-      "Images/half page 2.jpg",
-      "Images/half page 3.jpg",
-      "Images/half page 4.jpg",
-      "Images/half page 5.jpg",
-      "Images/half page 6.jpg"
+      "Images/half%20page%201.jpg",
+      "Images/half%20page%202.jpg",
+      "Images/half%20page%203.jpg",
+      "Images/half%20page%204.jpg",
+      "Images/half%20page%205.jpg",
+      "Images/half%20page%206.jpg"
     ],
     thin: [
       "Images/thin image 1.jpg",
@@ -103,4 +103,3 @@ document.addEventListener("DOMContentLoaded", function () {
   updateImages("backgrounds");
   updateSlidePreviews("Arrows, Numbers, Symbols, Banners");
 });
-

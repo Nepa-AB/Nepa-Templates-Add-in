@@ -1,47 +1,42 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Nepa Templates Add-in</title>
-  <link rel="stylesheet" href="taskpane.css" />
+  <link rel="stylesheet" href="../styles/styles.css" />
 </head>
 <body>
-  <h1>Nepa Templates Add-in</h1>
-
-  <section>
+  <div class="section">
     <h2>Templates</h2>
     <div class="template-buttons">
-      <a class="template-button orange" href="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/templates/Nepa empty template.pptx" target="_blank">
-        Nepa empty template
-      </a>
-      <a class="template-button orange" href="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/templates/Nepa template with example pictures.pptx" target="_blank">
-        Nepa template with example pictures
-      </a>
+      <a class="template-button" href="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/templates/Nepa%20empty%20template.pptx" target="_blank">Nepa empty template</a>
+      <a class="template-button" href="https://nepa-ab.github.io/Nepa-Templates-Add-in/src/templates/Nepa%20template%20with%20example%20pictures.pptx" target="_blank">Nepa template with example pictures</a>
     </div>
-  </section>
+  </div>
 
-  <section>
+  <div class="section">
     <h2>Backgrounds & Images</h2>
     <label for="imageCategory">Select Category:</label>
     <select id="imageCategory">
       <option value="backgrounds">Backgrounds</option>
-      <option value="halfpage">Half Page Images</option>
+      <option value="half">Half Page Images</option>
       <option value="thin">Thin Images</option>
     </select>
     <p class="tip">Tip: Drag and drop an image onto your slide. It keeps original size.</p>
-    <div id="imageContainer" class="image-grid"></div>
-  </section>
+    <div class="image-container" id="imageContainer"></div>
+  </div>
 
-  <section>
+  <div class="section">
     <h2>Slides</h2>
-    <label for="slideCategory">Select Slide Deck:</label>
+    <label for="slideCategory">Select Slide Category:</label>
     <select id="slideCategory">
-      <option value="arrows">Arrows, Numbers, Symbols, Banners</option>
-      <option value="assets">Assets</option>
+      <option value="Arrows, Numbers, Symbols, Banners">Arrows, Numbers, Symbols, Banners</option>
+      <option value="Assets">Assets</option>
     </select>
-    <div id="slidesContainer" class="image-grid slides-grid"></div>
-  </section>
+    <div class="slide-previews" id="slidePreviews"></div>
+  </div>
 
-  <script src="taskpane.js"></script>
+  <script src="../scripts/taskpane.js"></script>
 </body>
 </html>
