@@ -1,77 +1,106 @@
-Office.onReady(() => {
-  document.getElementById('imageCategory').addEventListener('change', renderImages);
-  document.getElementById('slideCategory').addEventListener('change', renderSlides);
-  renderImages();
-  renderSlides();
+document.addEventListener("DOMContentLoaded", function () {
+  const imageContainer = document.getElementById("imageContainer");
+  const imageCategory = document.getElementById("imageCategory");
+  const slideCategory = document.getElementById("slideCategory");
+  const slidePreviews = document.getElementById("slidePreviews");
+
+  const imageSources = {
+    backgrounds: [
+      "backgrounds/background 1.png",
+      "backgrounds/background 2.png"
+    ],
+    half: [
+      "Images/half page 1.jpg",
+      "Images/half page 2.jpg",
+      "Images/half page 3.jpg",
+      "Images/half page 4.jpg",
+      "Images/half page 5.jpg",
+      "Images/half page 6.jpg"
+    ],
+    thin: [
+      "Images/thin image 1.jpg",
+      "Images/thin image 2.jpg",
+      "Images/thin image 3.jpg",
+      "Images/thin image 4.jpg",
+      "Images/thin image 5.jpg",
+      "Images/thin image 6.jpg"
+    ]
+  };
+
+  const slidePreviewsData = {
+    "Arrows, Numbers, Symbols, Banners": [
+      "slides-previews/Arrows, Numbers, Symbols, Banners/slide1.jpg",
+      "slides-previews/Arrows, Numbers, Symbols, Banners/slide2.jpg"
+    ],
+    Assets: [
+      "slides-previews/Assets/slide1.jpg",
+      "slides-previews/Assets/slide2.jpg",
+      "slides-previews/Assets/slide3.jpg",
+      "slides-previews/Assets/slide4.jpg",
+      "slides-previews/Assets/slide5.jpg",
+      "slides-previews/Assets/slide6.jpg",
+      "slides-previews/Assets/slide7.jpg",
+      "slides-previews/Assets/slide8.jpg",
+      "slides-previews/Assets/slide9.jpg",
+      "slides-previews/Assets/slide10.jpg"
+    ]
+  };
+
+  function updateImages(category) {
+    imageContainer.innerHTML = "";
+    const basePath = "https://nepa-ab.github.io/Nepa-Templates-Add-in/src/";
+    imageSources[category].forEach((src) => {
+      const img = document.createElement("img");
+      img.src = basePath + src;
+      img.className = "draggable-image";
+      img.draggable = true;
+      img.addEventListener("dragstart", (e) => {
+        e.dataTransfer.setData("text/uri-list", img.src);
+        console.log("Dragging image:", img.src);
+      });
+      imageContainer.appendChild(img);
+    });
+  }
+
+  function updateSlidePreviews(category) {
+    slidePreviews.innerHTML = "";
+    const basePath = "https://nepa-ab.github.io/Nepa-Templates-Add-in/src/";
+    slidePreviewsData[category].forEach((src, index) => {
+      const img = document.createElement("img");
+      img.src = basePath + src;
+      img.className = "slide-preview";
+      img.title = `Click to insert slide ${index + 1}`;
+      img.style.cursor = "pointer";
+      img.addEventListener("click", () => {
+        insertSlide(category, index + 1);
+      });
+      slidePreviews.appendChild(img);
+    });
+  }
+
+  function insertSlide(category, slideIndex) {
+    const pptxLinks = {
+      "Arrows, Numbers, Symbols, Banners": "https://nepa-ab.github.io/Nepa-Templates-Add-in/src/slides/Arrows, Numbers, Symbols, Banners.pptx",
+      Assets: "https://nepa-ab.github.io/Nepa-Templates-Add-in/src/slides/Assets.pptx"
+    };
+
+    const pptxUrl = pptxLinks[category];
+    Office.context.document.setSelectedDataAsync(
+      `To insert slide ${slideIndex}, open: ${pptxUrl}`,
+      { coercionType: Office.CoercionType.Text }
+    );
+  }
+
+  imageCategory.addEventListener("change", (e) => {
+    updateImages(e.target.value);
+  });
+
+  slideCategory.addEventListener("change", (e) => {
+    updateSlidePreviews(e.target.value);
+  });
+
+  // Initial load
+  updateImages("backgrounds");
+  updateSlidePreviews("Arrows, Numbers, Symbols, Banners");
 });
 
-// Image rendering
-function renderImages() {
-  const container = document.getElementById('imageContainer');
-  container.innerHTML = '';
-  const category = document.getElementById('imageCategory').value;
-
-  let images = [];
-
-  if (category === 'backgrounds') {
-    images = ['background 1.png', 'background 2.png'].map(name =>
-      `https://nepa-ab.github.io/Nepa-Templates-Add-in/src/backgrounds/${encodeURIComponent(name)}`
-    );
-  } else if (category === 'halfpage') {
-    images = [1, 2, 3, 4, 5, 6].map(i =>
-      `https://nepa-ab.github.io/Nepa-Templates-Add-in/src/Images/${encodeURIComponent('half page ' + i + '.jpg')}`
-    );
-  } else if (category === 'thin') {
-    images = [1, 2, 3, 4, 5, 6].map(i =>
-      `https://nepa-ab.github.io/Nepa-Templates-Add-in/src/Images/${encodeURIComponent('thin image ' + i + '.jpg')}`
-    );
-  }
-
-  images.forEach(url => {
-    const img = document.createElement('img');
-    img.src = url;
-    img.draggable = true;
-    img.addEventListener('dragstart', (e) => {
-      e.dataTransfer.setData('text/plain', url);
-    });
-    container.appendChild(img);
-  });
-}
-
-// Slides rendering
-function renderSlides() {
-  const slidesContainer = document.getElementById('slidesContainer');
-  slidesContainer.innerHTML = '';
-  const selection = document.getElementById('slideCategory').value;
-
-  let previews = [];
-  let pptxUrl = '';
-
-  if (selection === 'arrows') {
-    pptxUrl = 'https://nepa-ab.github.io/Nepa-Templates-Add-in/src/slides/Arrows, Numbers, Symbols, Banners.pptx';
-    previews = [1, 2].map(i =>
-      `https://nepa-ab.github.io/Nepa-Templates-Add-in/src/slides-previews/Arrows, Numbers, Symbols, Banners/slide${i}.jpg`
-    );
-  } else if (selection === 'assets') {
-    pptxUrl = 'https://nepa-ab.github.io/Nepa-Templates-Add-in/src/slides/Assets.pptx';
-    previews = Array.from({ length: 10 }, (_, i) =>
-      `https://nepa-ab.github.io/Nepa-Templates-Add-in/src/slides-previews/Assets/slide${i + 1}.jpg`
-    );
-  }
-
-  previews.forEach((url, index) => {
-    const img = document.createElement('img');
-    img.src = url;
-    img.title = `Insert slide ${index + 1}`;
-    img.addEventListener('click', async () => {
-      await insertSlideFromPptx(pptxUrl, index);
-    });
-    slidesContainer.appendChild(img);
-  });
-}
-
-// Placeholder for inserting slide (future implementation)
-async function insertSlideFromPptx(pptxUrl, slideIndex) {
-  console.log(`Would insert slide ${slideIndex + 1} from ${pptxUrl}`);
-  alert('Slide insertion will be available in a future version. For now, please copy and paste the desired slide manually.');
-}
