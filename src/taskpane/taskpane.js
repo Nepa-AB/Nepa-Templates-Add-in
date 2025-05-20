@@ -63,17 +63,23 @@ function loadImages(category) {
   });
 }
 
+function showNotification(message) {
+  const note = document.getElementById("notification");
+  if (!note) return;
+  note.innerText = message;
+  note.style.display = "block";
+  setTimeout(() => { note.style.display = "none"; }, 2500);
+}
+
 async function insertImageToActiveSlide(imgUrl) {
   try {
     // Fetch image as base64
     const response = await fetch(imgUrl);
     const blob = await response.blob();
 
-    // Convert to base64
     const base64 = await new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onloadend = () => {
-        // Remove "data:image/png;base64," prefix
         const result = reader.result.split(',')[1];
         resolve(result);
       };
@@ -82,27 +88,31 @@ async function insertImageToActiveSlide(imgUrl) {
     });
 
     await PowerPoint.run(async (context) => {
-      const slides = context.presentation.slides;
-      slides.load("items");
+      // Get selected slides and load 'items'
+      const selectedSlides = context.presentation.getSelectedSlides();
+      selectedSlides.load("items");
       await context.sync();
 
-      // Insert on the currently selected slide, or first if none selected
-      let slide;
-      if (context.presentation.getSelectedSlides().items.length > 0) {
-        slide = context.presentation.getSelectedSlides().items[0];
+      let targetSlide;
+      if (selectedSlides.items && selectedSlides.items.length > 0) {
+        targetSlide = selectedSlides.items[0];
       } else {
-        slide = slides.getItemAt(0);
+        // Fall back to first slide
+        const slides = context.presentation.slides;
+        slides.load("items");
+        await context.sync();
+        targetSlide = slides.items[0];
       }
 
-      slide.shapes.addImage(base64);
+      targetSlide.shapes.addImage(base64);
       await context.sync();
     });
 
-    // Optionally, notify user
-    // alert("Image inserted!");
+    showNotification("Image inserted!");
+
   } catch (error) {
     console.error(error);
-    alert("Failed to insert image. Please try again.");
+    showNotification("Failed to insert image. See console for details.");
   }
 }
 
@@ -157,10 +167,11 @@ async function insertSlide(fileUrl, slideNumber) {
       // Insert slide from file as first slide (index 0)
       await slides.insertFromFile(fileUrl, 0, { slideStart: slideNumber, slideEnd: slideNumber });
       await context.sync();
-      // Optionally notify user: alert(`Inserted slide ${slideNumber}`);
     });
+    showNotification(`Inserted slide ${slideNumber}`);
   } catch (error) {
     console.error(error);
-    alert("Failed to insert slide. Please try again.");
+    showNotification("Failed to insert slide. See console for details.");
   }
 }
+
