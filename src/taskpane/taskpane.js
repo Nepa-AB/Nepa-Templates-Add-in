@@ -39,27 +39,71 @@ function loadImages(category) {
   container.innerHTML = "";
   let baseUrl = "https://nepa-ab.github.io/Nepa-Templates-Add-in/src/backgrounds/";
 
-  if (category === "half") {
-    baseUrl = "https://nepa-ab.github.io/Nepa-Templates-Add-in/src/Images/";
-  } else if (category === "thin") {
+  if (category === "half" || category === "thin") {
     baseUrl = "https://nepa-ab.github.io/Nepa-Templates-Add-in/src/Images/";
   }
 
   images[category].forEach((imgName) => {
+    const wrapper = document.createElement("div");
+    wrapper.className = "image-card";
+
     const img = document.createElement("img");
     img.src = baseUrl + encodeURIComponent(imgName);
     img.alt = imgName;
-    img.draggable = true;
-    img.addEventListener("dragstart", dragStart);
-    container.appendChild(img);
+
+    const insertBtn = document.createElement("button");
+    insertBtn.className = "insert-btn";
+    insertBtn.textContent = "Insert";
+    insertBtn.onclick = () => insertImageToActiveSlide(img.src);
+
+    wrapper.appendChild(img);
+    wrapper.appendChild(insertBtn);
+
+    container.appendChild(wrapper);
   });
 }
 
-function dragStart(ev) {
-  const img = ev.target;
-  ev.dataTransfer.setData("text/plain", img.src);
-  ev.dataTransfer.effectAllowed = "copy";
-  console.log(`Dragging image: ${img.src}`);
+async function insertImageToActiveSlide(imgUrl) {
+  try {
+    // Fetch image as base64
+    const response = await fetch(imgUrl);
+    const blob = await response.blob();
+
+    // Convert to base64
+    const base64 = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        // Remove "data:image/png;base64," prefix
+        const result = reader.result.split(',')[1];
+        resolve(result);
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+
+    await PowerPoint.run(async (context) => {
+      const slides = context.presentation.slides;
+      slides.load("items");
+      await context.sync();
+
+      // Insert on the currently selected slide, or first if none selected
+      let slide;
+      if (context.presentation.getSelectedSlides().items.length > 0) {
+        slide = context.presentation.getSelectedSlides().items[0];
+      } else {
+        slide = slides.getItemAt(0);
+      }
+
+      slide.shapes.addImage(base64);
+      await context.sync();
+    });
+
+    // Optionally, notify user
+    // alert("Image inserted!");
+  } catch (error) {
+    console.error(error);
+    alert("Failed to insert image. Please try again.");
+  }
 }
 
 async function loadSlides(category) {
@@ -106,17 +150,14 @@ async function insertSlide(fileUrl, slideNumber) {
   try {
     await PowerPoint.run(async (context) => {
       const presentation = context.presentation;
-
-      // Insert the slide as first slide
       const slides = presentation.slides;
       slides.load("items");
       await context.sync();
 
       // Insert slide from file as first slide (index 0)
       await slides.insertFromFile(fileUrl, 0, { slideStart: slideNumber, slideEnd: slideNumber });
-
       await context.sync();
-      console.log(`Inserted slide ${slideNumber} from ${fileUrl}`);
+      // Optionally notify user: alert(`Inserted slide ${slideNumber}`);
     });
   } catch (error) {
     console.error(error);
