@@ -1,107 +1,81 @@
-document.addEventListener("DOMContentLoaded", function () {
-  const imageGrid = document.getElementById("image-grid");
-  const categorySelect = document.getElementById("image-category");
+document.addEventListener("DOMContentLoaded", () => {
+  const imageCategory = document.getElementById("imageCategory");
+  const imageContainer = document.getElementById("imageContainer");
 
-  const imageCategories = {
-    backgrounds: {
-      path: "https://nepa-ab.github.io/Nepa-Templates-Add-in/src/backgrounds/",
-      files: ["background 1.png", "background 2.png", "background 3.png", "background 4.png", "background 5.png", "background 6.png"]
-    },
-    half: {
-      path: "https://nepa-ab.github.io/Nepa-Templates-Add-in/src/Images/",
-      files: ["half page 1.jpg", "half page 2.jpg", "half page 3.jpg", "half page 4.jpg", "half page 5.jpg", "half page 6.jpg"]
-    },
-    thin: {
-      path: "https://nepa-ab.github.io/Nepa-Templates-Add-in/src/Images/",
-      files: ["thin image 1.jpg", "thin image 2.jpg", "thin image 3.jpg", "thin image 4.jpg", "thin image 5.jpg", "thin image 6.jpg"]
+  const slideCategory = document.getElementById("slideCategory");
+  const slidesContainer = document.getElementById("slidesContainer");
+
+  function renderImages(category) {
+    imageContainer.innerHTML = "";
+    let imageList = [];
+
+    if (category === "backgrounds") {
+      imageList = Array.from({ length: 6 }, (_, i) => `backgrounds/background ${i + 1}.png`);
+    } else if (category === "halfpage") {
+      imageList = Array.from({ length: 6 }, (_, i) => `Images/half page ${i + 1}.jpg`);
+    } else if (category === "thin") {
+      imageList = Array.from({ length: 6 }, (_, i) => `Images/thin image ${i + 1}.jpg`);
     }
-  };
 
-  function loadImages(category) {
-    imageGrid.innerHTML = "";
-    const { path, files } = imageCategories[category];
-
-    files.forEach(file => {
+    imageList.forEach((src) => {
       const img = document.createElement("img");
-      img.src = path + file;
-      img.alt = file;
+      img.src = `https://nepa-ab.github.io/Nepa-Templates-Add-in/src/${src}`;
+      img.alt = src;
       img.draggable = true;
-      img.classList.add("draggable-image");
 
       img.addEventListener("dragstart", (e) => {
-        e.dataTransfer.setData("text", img.src);
+        e.dataTransfer.setData("text/uri-list", img.src);
+        console.log("Dragging image:", img.src);
       });
 
-      imageGrid.appendChild(img);
+      imageContainer.appendChild(img);
     });
   }
 
-  categorySelect.addEventListener("change", () => {
-    const selectedCategory = categorySelect.value;
-    loadImages(selectedCategory);
-  });
-
-  // Load default
-  loadImages("backgrounds");
-
-  // Slides Section
-  const slidePreviewMap = {
-    "Arrows, Numbers, Symbols, Banners": {
-      basePath: "https://nepa-ab.github.io/Nepa-Templates-Add-in/src/slides-previews/Arrows, Numbers, Symbols, Banners/",
-      count: 2,
-      pptxUrl: "https://nepa-ab.github.io/Nepa-Templates-Add-in/src/slides/Arrows, Numbers, Symbols, Banners.pptx"
-    },
-    "Assets": {
-      basePath: "https://nepa-ab.github.io/Nepa-Templates-Add-in/src/slides-previews/Assets/",
-      count: 10,
-      pptxUrl: "https://nepa-ab.github.io/Nepa-Templates-Add-in/src/slides/Assets.pptx"
-    }
-  };
-
-  const slidesDropdown = document.getElementById("slides-dropdown");
-  const slidesContainer = document.getElementById("slides-previews");
-
-  slidesDropdown.addEventListener("change", async (e) => {
-    const selected = e.target.value;
+  function renderSlidePreviews(category) {
     slidesContainer.innerHTML = "";
 
-    if (slidePreviewMap[selected]) {
-      const { basePath, count, pptxUrl } = slidePreviewMap[selected];
-      for (let i = 1; i <= count; i++) {
-        const img = document.createElement("img");
-        img.src = `${basePath}slide${i}.jpg`;
-        img.alt = `Slide ${i}`;
-        img.classList.add("slide-preview");
-        img.style.cursor = "pointer";
-        img.dataset.slideIndex = i;
-        img.dataset.pptxUrl = pptxUrl;
-        img.dataset.category = selected;
-
-        img.addEventListener("click", insertSlideFromPptx);
-        slidesContainer.appendChild(img);
-      }
+    let previews = [];
+    if (category === "arrows") {
+      previews = [1, 2].map(i => ({
+        src: `https://nepa-ab.github.io/Nepa-Templates-Add-in/src/slides-previews/Arrows, Numbers, Symbols, Banners/slide${i}.jpg`,
+        pptx: `https://nepa-ab.github.io/Nepa-Templates-Add-in/src/slides/Arrows, Numbers, Symbols, Banners.pptx`,
+        index: i
+      }));
+    } else if (category === "assets") {
+      previews = Array.from({ length: 10 }, (_, i) => ({
+        src: `https://nepa-ab.github.io/Nepa-Templates-Add-in/src/slides-previews/Assets/slide${i + 1}.jpg`,
+        pptx: `https://nepa-ab.github.io/Nepa-Templates-Add-in/src/slides/Assets.pptx`,
+        index: i + 1
+      }));
     }
-  });
 
-  async function insertSlideFromPptx(event) {
-    const slideIndex = parseInt(event.target.dataset.slideIndex, 10);
-    const pptxUrl = event.target.dataset.pptxUrl;
+    previews.forEach(({ src, pptx, index }) => {
+      const img = document.createElement("img");
+      img.src = src;
+      img.alt = `Slide ${index}`;
+      img.classList.add("slide-preview");
 
-    try {
-      const response = await fetch(pptxUrl);
-      const blob = await response.blob();
-      const arrayBuffer = await blob.arrayBuffer();
-      const fileBase64 = btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)));
-
-      await PowerPoint.run(async (context) => {
-        const presentation = context.presentation;
-        const slides = presentation.slides;
-        const insertedSlide = slides.insertSlideFromBase64(fileBase64, PowerPoint.InsertSlideFormatting.useDestinationTheme);
-        insertedSlide.insertAt(0);
-        await context.sync();
+      img.addEventListener("click", () => {
+        Office.context.presentation.insertSlidesFromBase64Url(pptx, {
+          formatting: Office.ImageFormatting.MatchDestination,
+          position: 0
+        }, (result) => {
+          if (result.status === Office.AsyncResultStatus.Failed) {
+            console.error("Error inserting slide:", result.error.message);
+            alert("Unable to insert slide. Please try again.");
+          }
+        });
       });
-    } catch (error) {
-      console.error("Failed to insert slide:", error);
-    }
+
+      slidesContainer.appendChild(img);
+    });
   }
+
+  imageCategory.addEventListener("change", () => renderImages(imageCategory.value));
+  slideCategory.addEventListener("change", () => renderSlidePreviews(slideCategory.value));
+
+  renderImages("backgrounds");
+  renderSlidePreviews("arrows");
 });
+

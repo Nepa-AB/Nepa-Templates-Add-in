@@ -1,60 +1,69 @@
 body {
   font-family: Arial, sans-serif;
-  padding: 16px;
-  background-color: #f9f9f9;
-  color: #333;
+  margin: 20px;
+  max-width: 600px;
 }
 
 h1 {
   font-size: 24px;
-  margin-bottom: 12px;
-  color: #2c3e50;
+  margin-bottom: 16px;
 }
 
-h2 {
-  font-size: 18px;
-  margin-top: 24px;
-  margin-bottom: 8px;
-  color: #34495e;
+section {
+  margin-bottom: 30px;
+}
+
+.template-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.template-button {
+  padding: 10px 20px;
+  background-color: #0078d7;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: bold;
+}
+
+.template-button:hover {
+  background-color: #005fa3;
 }
 
 .image-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: 12px;
-  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
 }
 
-img {
-  width: 100%;
+.image-grid img {
+  width: 100px;
   height: auto;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  cursor: grab;
+  object-fit: contain;
+  background-color: #f0f0f0;
+}
+
+.tip {
+  font-size: 0.9em;
+  color: #666;
+  margin-top: 5px;
+}
+
+label, select {
+  display: block;
+  margin-top: 10px;
+}
+
+.slides-grid img {
   cursor: pointer;
-  transition: transform 0.2s ease;
+  border: 2px solid transparent;
+  transition: border-color 0.2s;
 }
 
-img:hover {
-  transform: scale(1.03);
-}
-
-.template-img {
-  border: 2px solid #3498db;
-}
-
-select {
-  width: 100%;
-  padding: 8px;
-  margin-top: 6px;
-  margin-bottom: 10px;
-  font-size: 14px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  background-color: white;
-}
-
-.tip-message {
-  font-size: 13px;
-  color: #888;
-  margin-bottom: 8px;
+.slides-grid img:hover {
+  border-color: #0078d7;
 }
