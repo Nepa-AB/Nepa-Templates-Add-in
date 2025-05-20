@@ -16,19 +16,23 @@ section {
 .template-buttons {
   display: flex;
   gap: 10px;
+  flex-wrap: wrap;
 }
 
 .template-button {
   padding: 10px 20px;
-  background-color: #0078d7;
-  color: white;
   text-decoration: none;
   border-radius: 6px;
   font-weight: bold;
 }
 
-.template-button:hover {
-  background-color: #005fa3;
+.template-button.orange {
+  background-color: orange;
+  color: black;
+}
+
+.template-button.orange:hover {
+  background-color: #e69500;
 }
 
 .image-grid {
