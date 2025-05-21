@@ -71,6 +71,21 @@ function showNotification(message) {
   setTimeout(() => { note.style.display = "none"; }, 2500);
 }
 
+// Fallback function using setSelectedDataAsync
+function insertImageFallback(base64, notify) {
+  Office.context.document.setSelectedDataAsync(
+    "data:image/png;base64," + base64,
+    { coercionType: Office.CoercionType.Image },
+    function (asyncResult) {
+      if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
+        notify("Image inserted (fallback method)!");
+      } else {
+        notify("Fallback image insert failed: " + asyncResult.error.message);
+      }
+    }
+  );
+}
+
 async function insertImageToActiveSlide(imgUrl) {
   try {
     // Fetch image as base64
@@ -104,25 +119,23 @@ async function insertImageToActiveSlide(imgUrl) {
         targetSlide = slides.items[0];
       }
 
-      // LOGGING STARTS HERE
-      // 1. Log if PowerPointApi 1.4 is supported
+      // Diagnostics
       const isApiSetSupported = Office.context.requirements.isSetSupported('PowerPointApi', '1.4');
       console.log("Office.context.requirements.isSetSupported('PowerPointApi', '1.4'):", isApiSetSupported);
-
-      // 2. Log available methods on targetSlide.shapes
       if (targetSlide.shapes) {
         console.log("Methods available on targetSlide.shapes:", Object.keys(targetSlide.shapes));
       } else {
         console.log("targetSlide.shapes is undefined or null");
       }
 
-      // Now attempt to add image (will fail gracefully if method not found)
+      // Try addImage first, then fallback
       if (targetSlide.shapes && typeof targetSlide.shapes.addImage === "function") {
         targetSlide.shapes.addImage(base64);
         await context.sync();
         showNotification("Image inserted!");
       } else {
-        showNotification("addImage is not available. Check console for diagnostic info.");
+        showNotification("addImage is not available. Trying fallback...");
+        insertImageFallback(base64, showNotification);
       }
     });
 
