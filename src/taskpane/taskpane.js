@@ -71,74 +71,43 @@ function showNotification(message) {
   setTimeout(() => { note.style.display = "none"; }, 2500);
 }
 
-// Fallback function using setSelectedDataAsync
-function insertImageFallback(base64, notify) {
-  Office.context.document.setSelectedDataAsync(
-    "data:image/png;base64," + base64,
-    { coercionType: Office.CoercionType.Image },
-    function (asyncResult) {
-      if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
-        notify("Image inserted (fallback method)!");
-      } else {
-        notify("Fallback image insert failed: " + asyncResult.error.message);
-      }
-    }
-  );
-}
-
 async function insertImageToActiveSlide(imgUrl) {
   try {
-    // Fetch image as base64
+    // Fetch the image as a blob
     const response = await fetch(imgUrl);
     const blob = await response.blob();
 
+    // Read blob as base64
     const base64 = await new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onloadend = () => {
-        const result = reader.result.split(',')[1];
-        resolve(result);
+        const result = reader.result;
+        const base64String = result.split(',')[1];
+        resolve(base64String);
       };
       reader.onerror = reject;
       reader.readAsDataURL(blob);
     });
 
-    await PowerPoint.run(async (context) => {
-      // Get selected slides and load 'items'
-      const selectedSlides = context.presentation.getSelectedSlides();
-      selectedSlides.load("items");
-      await context.sync();
+    // Choose correct MIME type
+    let mimeType = "image/png";
+    if (imgUrl.toLowerCase().endsWith(".jpg") || imgUrl.toLowerCase().endsWith(".jpeg")) {
+      mimeType = "image/jpeg";
+    }
+    const dataUri = `data:${mimeType};base64,${base64}`;
 
-      let targetSlide;
-      if (selectedSlides.items && selectedSlides.items.length > 0) {
-        targetSlide = selectedSlides.items[0];
-      } else {
-        // Fall back to first slide
-        const slides = context.presentation.slides;
-        slides.load("items");
-        await context.sync();
-        targetSlide = slides.items[0];
+    // Insert using Office.js (cross-platform, robust)
+    Office.context.document.setSelectedDataAsync(
+      dataUri,
+      { coercionType: Office.CoercionType.Image },
+      function (asyncResult) {
+        if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
+          showNotification("Image inserted!");
+        } else {
+          showNotification("Insert failed: " + asyncResult.error.message);
+        }
       }
-
-      // Diagnostics
-      const isApiSetSupported = Office.context.requirements.isSetSupported('PowerPointApi', '1.4');
-      console.log("Office.context.requirements.isSetSupported('PowerPointApi', '1.4'):", isApiSetSupported);
-      if (targetSlide.shapes) {
-        console.log("Methods available on targetSlide.shapes:", Object.keys(targetSlide.shapes));
-      } else {
-        console.log("targetSlide.shapes is undefined or null");
-      }
-
-      // Try addImage first, then fallback
-      if (targetSlide.shapes && typeof targetSlide.shapes.addImage === "function") {
-        targetSlide.shapes.addImage(base64);
-        await context.sync();
-        showNotification("Image inserted!");
-      } else {
-        showNotification("addImage is not available. Trying fallback...");
-        insertImageFallback(base64, showNotification);
-      }
-    });
-
+    );
   } catch (error) {
     console.error(error);
     showNotification("Failed to insert image. See console for details.");
