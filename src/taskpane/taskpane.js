@@ -104,11 +104,27 @@ async function insertImageToActiveSlide(imgUrl) {
         targetSlide = slides.items[0];
       }
 
-      targetSlide.shapes.addImage(base64);
-      await context.sync();
-    });
+      // LOGGING STARTS HERE
+      // 1. Log if PowerPointApi 1.4 is supported
+      const isApiSetSupported = Office.context.requirements.isSetSupported('PowerPointApi', '1.4');
+      console.log("Office.context.requirements.isSetSupported('PowerPointApi', '1.4'):", isApiSetSupported);
 
-    showNotification("Image inserted!");
+      // 2. Log available methods on targetSlide.shapes
+      if (targetSlide.shapes) {
+        console.log("Methods available on targetSlide.shapes:", Object.keys(targetSlide.shapes));
+      } else {
+        console.log("targetSlide.shapes is undefined or null");
+      }
+
+      // Now attempt to add image (will fail gracefully if method not found)
+      if (targetSlide.shapes && typeof targetSlide.shapes.addImage === "function") {
+        targetSlide.shapes.addImage(base64);
+        await context.sync();
+        showNotification("Image inserted!");
+      } else {
+        showNotification("addImage is not available. Check console for diagnostic info.");
+      }
+    });
 
   } catch (error) {
     console.error(error);
@@ -174,4 +190,3 @@ async function insertSlide(fileUrl, slideNumber) {
     showNotification("Failed to insert slide. See console for details.");
   }
 }
-
