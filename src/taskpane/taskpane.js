@@ -38,7 +38,7 @@ const images = {
 function loadImages(category) {
   const container = document.getElementById("imageContainer");
   container.innerHTML = "";
-  let baseUrl = "https://nepa-ab.github.io/Nepa-Templates-Add-in/src/backgrounds/";
+  let baseUrl = "https://nepa-ab.github.io/Nepa-Templates-Add-in/src/Images/";
 
   images[category].forEach((imgName) => {
     const img = document.createElement("img");
