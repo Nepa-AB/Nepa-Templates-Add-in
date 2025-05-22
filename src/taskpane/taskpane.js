@@ -1,6 +1,6 @@
 Office.onReady(() => {
   loadImages("backgrounds");
-  loadSlides("Arrows, Numbers, Symbols, Banners");
+  loadSlides(Object.keys(slidePacks)[0]); // Load the first slide pack by default
 
   document.getElementById("imageCategory").addEventListener("change", (e) => {
     loadImages(e.target.value);
@@ -13,7 +13,6 @@ Office.onReady(() => {
 
 const images = {
   backgrounds: [
-    // Removed the Wikipedia test image as requested
     "background 1.png",
     "background 2.png"
   ],
@@ -35,6 +34,28 @@ const images = {
   ]
 };
 
+// Slides packs—add new ones here!
+const slidePacks = {
+  "Arrows, Numbers, Symbols, Banners": {
+    file: "https://nepa-ab.github.io/Nepa-Templates-Add-in/src/slides/Arrows, Numbers, Symbols, Banners.pptx"
+  },
+  "Assets": {
+    file: "https://nepa-ab.github.io/Nepa-Templates-Add-in/src/slides/Assets.pptx"
+  },
+  "Funnels, pyramids, dimensional charts": {
+    file: "https://nepa-ab.github.io/Nepa-Templates-Add-in/src/slides/Funnels, pyramids, dimensional charts.pptx"
+  },
+  "Maps": {
+    file: "https://nepa-ab.github.io/Nepa-Templates-Add-in/src/slides/Maps .pptx"
+  },
+  "Text Boxes, Layouts": {
+    file: "https://nepa-ab.github.io/Nepa-Templates-Add-in/src/slides/Text Boxes, Layouts.pptx"
+  },
+  "Timelines": {
+    file: "https://nepa-ab.github.io/Nepa-Templates-Add-in/src/slides/Timelines.pptx"
+  }
+};
+
 function loadImages(category) {
   const container = document.getElementById("imageContainer");
   container.innerHTML = "";
@@ -44,37 +65,10 @@ function loadImages(category) {
     const img = document.createElement("img");
     img.src = imgName.startsWith("http") ? imgName : baseUrl + encodeURIComponent(imgName);
     img.alt = imgName;
-    img.draggable = true; // enables drag and drop natively
+    img.draggable = true;
     container.appendChild(img);
   });
 }
-
-// ------------------ SLIDES SECTION UPDATE ------------------
-
-const slidePacks = {
-  "Arrows, Numbers, Symbols, Banners": {
-    file: "https://nepa-ab.github.io/Nepa-Templates-Add-in/src/slides/Arrows, Numbers, Symbols, Banners.pptx",
-    previews: [
-      "https://nepa-ab.github.io/Nepa-Templates-Add-in/src/slides-previews/Arrows, Numbers, Symbols, Banners/slide1.jpg",
-      "https://nepa-ab.github.io/Nepa-Templates-Add-in/src/slides-previews/Arrows, Numbers, Symbols, Banners/slide2.jpg"
-    ]
-  },
-  "Assets": {
-    file: "https://nepa-ab.github.io/Nepa-Templates-Add-in/src/slides/Assets.pptx",
-    previews: [
-      "https://nepa-ab.github.io/Nepa-Templates-Add-in/src/slides-previews/Assets/slide1.jpg",
-      "https://nepa-ab.github.io/Nepa-Templates-Add-in/src/slides-previews/Assets/slide2.jpg",
-      "https://nepa-ab.github.io/Nepa-Templates-Add-in/src/slides-previews/Assets/slide3.jpg",
-      "https://nepa-ab.github.io/Nepa-Templates-Add-in/src/slides-previews/Assets/slide4.jpg",
-      "https://nepa-ab.github.io/Nepa-Templates-Add-in/src/slides-previews/Assets/slide5.jpg",
-      "https://nepa-ab.github.io/Nepa-Templates-Add-in/src/slides-previews/Assets/slide6.jpg",
-      "https://nepa-ab.github.io/Nepa-Templates-Add-in/src/slides-previews/Assets/slide7.jpg",
-      "https://nepa-ab.github.io/Nepa-Templates-Add-in/src/slides-previews/Assets/slide8.jpg",
-      "https://nepa-ab.github.io/Nepa-Templates-Add-in/src/slides-previews/Assets/slide9.jpg",
-      "https://nepa-ab.github.io/Nepa-Templates-Add-in/src/slides-previews/Assets/slide10.jpg"
-    ]
-  }
-};
 
 function loadSlides(category) {
   const container = document.getElementById("slidePreviews");
@@ -87,30 +81,16 @@ function loadSlides(category) {
   const downloadBtn = document.createElement("a");
   downloadBtn.href = pack.file;
   downloadBtn.className = "template-button";
-  downloadBtn.target = "_blank";
-  downloadBtn.download = "";
+  downloadBtn.download = ""; // uses default filename from URL
   downloadBtn.style.marginBottom = "8px";
   downloadBtn.textContent = "Download Slides Pack";
   container.appendChild(downloadBtn);
 
-  // Message (with new text)
+  // Message
   const msg = document.createElement("div");
   msg.style.margin = "10px 0 8px 0";
   msg.style.fontSize = "14px";
   msg.style.color = "#555";
   msg.textContent = "After downloading, open the slides pack and copy any slide or the object you want into your own presentation.";
   container.appendChild(msg);
-
-  // Previews
-  const previewsDiv = document.createElement("div");
-  previewsDiv.className = "slide-previews-images";
-  pack.previews.forEach((url, idx) => {
-    const img = document.createElement("img");
-    img.src = url;
-    img.alt = `Slide ${idx + 1}`;
-    img.className = "slide-preview-img";
-    previewsDiv.appendChild(img);
-  });
-  container.appendChild(previewsDiv);
 }
-
