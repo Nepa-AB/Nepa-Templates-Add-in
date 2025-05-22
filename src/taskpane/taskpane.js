@@ -13,6 +13,8 @@ Office.onReady(() => {
 
 const images = {
   backgrounds: [
+    // Added public Wikipedia PNG as first background image!
+    "https://upload.wikimedia.org/wikipedia/commons/4/47/PNG_transparency_demonstration_1.png",
     "background 1.png",
     "background 2.png"
   ],
@@ -39,16 +41,13 @@ function loadImages(category) {
   container.innerHTML = "";
   let baseUrl = "https://nepa-ab.github.io/Nepa-Templates-Add-in/src/backgrounds/";
 
-  if (category === "half" || category === "thin") {
-    baseUrl = "https://nepa-ab.github.io/Nepa-Templates-Add-in/src/Images/";
-  }
-
   images[category].forEach((imgName) => {
     const wrapper = document.createElement("div");
     wrapper.className = "image-card";
 
     const img = document.createElement("img");
-    img.src = baseUrl + encodeURIComponent(imgName);
+    // For full URLs (like Wikipedia), use as-is. For local filenames, prepend baseUrl.
+    img.src = imgName.startsWith("http") ? imgName : baseUrl + encodeURIComponent(imgName);
     img.alt = imgName;
 
     const insertBtn = document.createElement("button");
@@ -82,7 +81,7 @@ async function insertImageToActiveSlide(imgUrl) {
     }
     const blob = await response.blob();
 
-    // Optional: check blob size/type
+    // Check blob size/type
     if (!blob || blob.size === 0) {
       showNotification("Image fetch returned empty data!");
       console.error("Blob is empty or null:", blob);
@@ -114,8 +113,6 @@ async function insertImageToActiveSlide(imgUrl) {
 
     // Log for debug: open this dataUri in a new tab to check the image
     console.log("Data URI (prefix):", dataUri.slice(0, 100) + "...");
-    // Optional: copy to clipboard for manual checking
-    // navigator.clipboard.writeText(dataUri);
 
     Office.context.document.setSelectedDataAsync(
       dataUri,
