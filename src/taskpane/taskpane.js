@@ -1,6 +1,6 @@
 Office.onReady(() => {
   loadImages("backgrounds");
-  loadSlides(Object.keys(slidePacks)[0]); // Load the first slide pack by default
+  loadSlides(Object.keys(slidePacks)[0]);
 
   document.getElementById("imageCategory").addEventListener("change", (e) => {
     loadImages(e.target.value);
@@ -90,16 +90,15 @@ function loadSlides(category) {
   const downloadBtn = document.createElement("a");
   downloadBtn.href = pack.file;
   downloadBtn.className = "template-button";
-  downloadBtn.download = ""; // uses default filename from URL
+  downloadBtn.download = "";
   downloadBtn.style.marginBottom = "8px";
   downloadBtn.textContent = "Download Slides Pack";
   container.appendChild(downloadBtn);
 
   // Message
   const msg = document.createElement("div");
+  msg.className = "instruction-text";
   msg.style.margin = "10px 0 8px 0";
-  msg.style.fontSize = "14px";
-  msg.style.color = "#555";
   msg.textContent = "After downloading, open the slides pack and copy any slide or the object you want into your own presentation.";
   container.appendChild(msg);
 }
@@ -127,7 +126,9 @@ function loadFont(selected) {
   const downloadBtn = document.createElement("a");
   downloadBtn.href = font.file;
   downloadBtn.className = "template-button";
-  downloadBtn.download = ""; // Use default filename
+  downloadBtn.download = "";
   downloadBtn.textContent = "Download Font";
   container.appendChild(downloadBtn);
+
+  // Comment is now static in HTML, so no code needed for it here
 }
