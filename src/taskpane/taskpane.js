@@ -74,14 +74,30 @@ function showNotification(message) {
 async function insertImageToActiveSlide(imgUrl) {
   try {
     // Fetch the image as a blob
-    const response = await fetch(imgUrl);
+    const response = await fetch(imgUrl, {mode: "cors"});
+    if (!response.ok) {
+      showNotification("Failed to fetch image: " + response.statusText);
+      console.error("Fetch failed:", response);
+      return;
+    }
     const blob = await response.blob();
+
+    // Optional: check blob size/type
+    if (!blob || blob.size === 0) {
+      showNotification("Image fetch returned empty data!");
+      console.error("Blob is empty or null:", blob);
+      return;
+    }
 
     // Read blob as base64
     const base64 = await new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onloadend = () => {
         const result = reader.result;
+        if (!result) {
+          reject("FileReader result is empty.");
+          return;
+        }
         const base64String = result.split(',')[1];
         resolve(base64String);
       };
@@ -96,7 +112,11 @@ async function insertImageToActiveSlide(imgUrl) {
     }
     const dataUri = `data:${mimeType};base64,${base64}`;
 
-    // Insert using Office.js (cross-platform, robust)
+    // Log for debug: open this dataUri in a new tab to check the image
+    console.log("Data URI (prefix):", dataUri.slice(0, 100) + "...");
+    // Optional: copy to clipboard for manual checking
+    // navigator.clipboard.writeText(dataUri);
+
     Office.context.document.setSelectedDataAsync(
       dataUri,
       { coercionType: Office.CoercionType.Image },
@@ -105,6 +125,7 @@ async function insertImageToActiveSlide(imgUrl) {
           showNotification("Image inserted!");
         } else {
           showNotification("Insert failed: " + asyncResult.error.message);
+          console.error("Insert failed:", asyncResult.error);
         }
       }
     );
