@@ -13,7 +13,7 @@ Office.onReady(() => {
 
 const images = {
   backgrounds: [
-    // Added public Wikipedia PNG as first background image!
+    // Wikipedia PNG as a reliable public image
     "https://upload.wikimedia.org/wikipedia/commons/4/47/PNG_transparency_demonstration_1.png",
     "background 1.png",
     "background 2.png"
@@ -39,14 +39,13 @@ const images = {
 function loadImages(category) {
   const container = document.getElementById("imageContainer");
   container.innerHTML = "";
-  let baseUrl = "https://nepa-ab.github.io/Nepa-Templates-Add-in/src/backgrounds/";
+  let baseUrl = "https://nepa-ab.github.io/Nepa-Templates-Add-in/src/Images/";
 
   images[category].forEach((imgName) => {
     const wrapper = document.createElement("div");
     wrapper.className = "image-card";
 
     const img = document.createElement("img");
-    // For full URLs (like Wikipedia), use as-is. For local filenames, prepend baseUrl.
     img.src = imgName.startsWith("http") ? imgName : baseUrl + encodeURIComponent(imgName);
     img.alt = imgName;
 
@@ -70,49 +69,49 @@ function showNotification(message) {
   setTimeout(() => { note.style.display = "none"; }, 2500);
 }
 
-async function insertImageToActiveSlide(imgUrl) {
-  try {
-    // Fetch the image as a blob
-    const response = await fetch(imgUrl, {mode: "cors"});
-    if (!response.ok) {
-      showNotification("Failed to fetch image: " + response.statusText);
-      console.error("Fetch failed:", response);
+// New: Fetch image as base64 using XHR (reliable for Office add-ins)
+function fetchImageAsBase64(imgUrl, callback) {
+  let mimeType = "image/png";
+  if (imgUrl.toLowerCase().endsWith(".jpg") || imgUrl.toLowerCase().endsWith(".jpeg")) {
+    mimeType = "image/jpeg";
+  }
+  const xhr = new XMLHttpRequest();
+  xhr.open("GET", imgUrl, true);
+  xhr.responseType = "arraybuffer";
+  xhr.onload = function () {
+    if (xhr.status === 200) {
+      const uInt8Array = new Uint8Array(xhr.response);
+      let binary = '';
+      for (let i = 0; i < uInt8Array.length; i++) {
+        binary += String.fromCharCode(uInt8Array[i]);
+      }
+      const base64 = window.btoa(binary);
+      const dataUri = `data:${mimeType};base64,${base64}`;
+      console.log("Data URI (prefix):", dataUri.slice(0, 100) + "...");
+      callback(null, dataUri, uInt8Array.length, mimeType);
+    } else {
+      callback(new Error("Image fetch failed: " + xhr.status), null, 0, mimeType);
+    }
+  };
+  xhr.onerror = function () {
+    callback(new Error("Image fetch network error"), null, 0, mimeType);
+  };
+  xhr.send();
+}
+
+function insertImageToActiveSlide(imgUrl) {
+  fetchImageAsBase64(imgUrl, function(err, dataUri, byteLength, mimeType) {
+    if (err) {
+      showNotification("Fetch failed: " + err.message);
+      console.error(err);
       return;
     }
-    const blob = await response.blob();
+    // Log blob info for debug
+    console.log("Fetched image byteLength:", byteLength, "MIME type:", mimeType);
 
-    // Check blob size/type
-    if (!blob || blob.size === 0) {
-      showNotification("Image fetch returned empty data!");
-      console.error("Blob is empty or null:", blob);
-      return;
-    }
-
-    // Read blob as base64
-    const base64 = await new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const result = reader.result;
-        if (!result) {
-          reject("FileReader result is empty.");
-          return;
-        }
-        const base64String = result.split(',')[1];
-        resolve(base64String);
-      };
-      reader.onerror = reject;
-      reader.readAsDataURL(blob);
-    });
-
-    // Choose correct MIME type
-    let mimeType = "image/png";
-    if (imgUrl.toLowerCase().endsWith(".jpg") || imgUrl.toLowerCase().endsWith(".jpeg")) {
-      mimeType = "image/jpeg";
-    }
-    const dataUri = `data:${mimeType};base64,${base64}`;
-
-    // Log for debug: open this dataUri in a new tab to check the image
-    console.log("Data URI (prefix):", dataUri.slice(0, 100) + "...");
+    // Test the Data URI by opening it in a new tab to verify the image
+    // Uncomment the next line to auto-open for debugging
+    // window.open(dataUri, "_blank");
 
     Office.context.document.setSelectedDataAsync(
       dataUri,
@@ -126,10 +125,7 @@ async function insertImageToActiveSlide(imgUrl) {
         }
       }
     );
-  } catch (error) {
-    console.error(error);
-    showNotification("Failed to insert image. See console for details.");
-  }
+  });
 }
 
 async function loadSlides(category) {
