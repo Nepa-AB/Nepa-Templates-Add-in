@@ -13,7 +13,7 @@ Office.onReady(() => {
 
 const images = {
   backgrounds: [
-    "https://upload.wikimedia.org/wikipedia/commons/4/47/PNG_transparency_demonstration_1.png",
+    // Removed the Wikipedia test image as requested
     "background 1.png",
     "background 2.png"
   ],
@@ -93,12 +93,12 @@ function loadSlides(category) {
   downloadBtn.textContent = "Download Slides Pack";
   container.appendChild(downloadBtn);
 
-  // Message
+  // Message (with new text)
   const msg = document.createElement("div");
   msg.style.margin = "10px 0 8px 0";
   msg.style.fontSize = "14px";
   msg.style.color = "#555";
-  msg.textContent = "After downloading, open the slides pack and copy any slide you want into your own presentation.";
+  msg.textContent = "After downloading, open the slides pack and copy any slide or the object you want into your own presentation.";
   container.appendChild(msg);
 
   // Previews
@@ -113,6 +113,4 @@ function loadSlides(category) {
   });
   container.appendChild(previewsDiv);
 }
-
-// (insertSlide and notification functions are no longer needed for slides)
 
