@@ -55,7 +55,7 @@ const slidePacks = {
     file: "https://nepa-ab.github.io/Nepa-Templates-Add-in/src/slides/Funnels, pyramids, dimensional charts.pptx"
   },
   "Maps": {
-    file: "https://nepa-ab.github.io/Nepa-Templates-Add-in/src/slides/Maps .pptx"
+    file: "https://nepa-ab.github.io/Nepa-Templates-Add-in/src/slides/Maps.pptx"
   },
   "Text Boxes, Layouts": {
     file: "https://nepa-ab.github.io/Nepa-Templates-Add-in/src/slides/Text Boxes, Layouts.pptx"
