@@ -69,7 +69,22 @@ function showNotification(message) {
   setTimeout(() => { note.style.display = "none"; }, 2500);
 }
 
-// New: Fetch image as base64 using XHR (reliable for Office add-ins)
+// Robust: Convert Uint8Array to base64 (handles all bytes, avoids Unicode bugs)
+function uint8ToBase64(u8Arr) {
+  const CHUNK_SIZE = 0x8000; // 32k
+  let index = 0;
+  const length = u8Arr.length;
+  let result = '';
+  let slice;
+  while (index < length) {
+    slice = u8Arr.subarray(index, Math.min(index + CHUNK_SIZE, length));
+    result += String.fromCharCode.apply(null, slice);
+    index += CHUNK_SIZE;
+  }
+  return window.btoa(result);
+}
+
+// Fetch image as base64 using XHR (binary safe)
 function fetchImageAsBase64(imgUrl, callback) {
   let mimeType = "image/png";
   if (imgUrl.toLowerCase().endsWith(".jpg") || imgUrl.toLowerCase().endsWith(".jpeg")) {
@@ -81,11 +96,8 @@ function fetchImageAsBase64(imgUrl, callback) {
   xhr.onload = function () {
     if (xhr.status === 200) {
       const uInt8Array = new Uint8Array(xhr.response);
-      let binary = '';
-      for (let i = 0; i < uInt8Array.length; i++) {
-        binary += String.fromCharCode(uInt8Array[i]);
-      }
-      const base64 = window.btoa(binary);
+      console.log("Fetched image byteLength:", uInt8Array.length, "MIME type:", mimeType);
+      const base64 = uint8ToBase64(uInt8Array);
       const dataUri = `data:${mimeType};base64,${base64}`;
       console.log("Data URI (prefix):", dataUri.slice(0, 100) + "...");
       callback(null, dataUri, uInt8Array.length, mimeType);
@@ -106,11 +118,8 @@ function insertImageToActiveSlide(imgUrl) {
       console.error(err);
       return;
     }
-    // Log blob info for debug
-    console.log("Fetched image byteLength:", byteLength, "MIME type:", mimeType);
 
-    // Test the Data URI by opening it in a new tab to verify the image
-    // Uncomment the next line to auto-open for debugging
+    // For debugging: open Data URI in a new tab
     // window.open(dataUri, "_blank");
 
     Office.context.document.setSelectedDataAsync(
